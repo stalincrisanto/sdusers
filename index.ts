@@ -4,6 +4,7 @@ import type { Request, Response } from "express";
 import axios from "axios";
 import https from "https";
 import type { ResponseSD } from "./types";
+import qs from "qs";
 
 const app = express();
 const PORT = 3000;
@@ -55,3 +56,46 @@ app.get("/usuarios", async (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+
+
+// import axios from 'axios';
+// import qs from 'qs'; // Para codificar los datos en x-www-form-urlencoded
+
+// async function updateUser() {
+//   const url = 'https://localhost:8080/api/v3/users/302'; // URL de la API
+//   const authToken = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'; // Tu token de autenticación
+//   const csrfToken = '43bc383204b3996af370fc6f7dc43820286ac37faafa309f0a62b441c6f25fd46f399ec4b51459dc5d6aff20ddd92210bb1461d81c751b0cf1e4059595331712'; // Token CSRF
+
+//   // El objeto que quieres enviar
+//   const inputData = {
+//     user: {
+//       email_id: 'test@test.com',
+//     },
+//   };
+
+//   // Convertir el objeto `inputData` a un string JSON
+//   const inputDataString = JSON.stringify(inputData);
+
+//   // Usar `qs.stringify` para convertir los datos a `x-www-form-urlencoded`
+//   const data = qs.stringify({
+//     input_data: inputDataString,
+//     sdpcsrfparam: csrfToken, // Si el token CSRF es requerido como parámetro
+//   });
+
+//   try {
+//     const response = await axios.put(url, data, {
+//       headers: {
+//         'Content-Type': 'application/x-www-form-urlencoded', // Especifica el tipo de contenido
+//         'authtoken': authToken, // Token de autenticación
+//       },
+//     });
+
+//     console.log('Respuesta del servidor:', response.data);
+//   } catch (error) {
+//     console.error('Error al realizar la solicitud:', error.response ? error.response.data : error.message);
+//   }
+// }
+
+// // Llamar a la función para hacer la petición
+// updateUser();
