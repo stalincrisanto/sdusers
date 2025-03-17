@@ -1,0 +1,422 @@
+{
+    "response_status": [
+        {
+            "status_code": 2000,
+            "status": "success"
+        }
+    ],
+    "list_info": {
+        "has_more_rows": false,
+        "start_index": 1,
+        "row_count": 8
+    },
+    "users": [
+        {
+            "email_id": null,
+            "extension": null,
+            "purchase_approver": null,
+            "ci_people_fields": {},
+            "description": "End User of the software product",
+            "is_vipuser": false,
+            "reporting_to": null,
+            "type": "User",
+            "citype": {
+                "name": "User",
+                "id": 3
+            },
+            "cost_per_hour": "0.00",
+            "ci_default_fields": {
+                "udf_pickref_1": null
+            },
+            "can_generate_authtoken": false,
+            "org_user_status": "ACTIVE",
+            "id": "4",
+            "department": null,
+            "first_name": null,
+            "service_request_approver": null,
+            "created_time": {
+                "display_value": "Mar 10, 2025 10:11 AM",
+                "value": "1741619519250"
+            },
+            "is_technician": false,
+            "jobtitle": null,
+            "mobile": "1234567890",
+            "profile_pic": {
+                "content-url": "/images/default-profile-pic2.svg"
+            },
+            "project_roles": null,
+            "last_name": null,
+            "sms_mail_id": null,
+            "middle_name": null,
+            "created_by": null,
+            "ciid": "17",
+            "purchase_approval_limit": null,
+            "login_name": "guest",
+            "requester_allowed_to_view": null,
+            "phone": "8888",
+            "sip_user": null,
+            "employee_id": "888",
+            "domain": null,
+            "name": "Guest",
+            "enable_telephony": false,
+            "status": "ACTIVE"
+        },
+        {
+            "email_id": null,
+            "extension": null,
+            "purchase_approver": true,
+            "ci_people_fields": {},
+            "description": "",
+            "is_vipuser": false,
+            "reporting_to": null,
+            "type": "Technician",
+            "citype": {
+                "name": "User",
+                "id": 3
+            },
+            "cost_per_hour": "0.00",
+            "ci_default_fields": {
+                "udf_pickref_1": null
+            },
+            "can_generate_authtoken": true,
+            "org_user_status": "ACTIVE",
+            "id": "5",
+            "department": null,
+            "first_name": null,
+            "service_request_approver": null,
+            "created_time": {
+                "display_value": "Mar 10, 2025 10:11 AM",
+                "value": "1741619519250"
+            },
+            "is_technician": true,
+            "jobtitle": null,
+            "mobile": "1234567890",
+            "profile_pic": {
+                "content-url": "/images/default-profile-pic2.svg"
+            },
+            "project_roles": {
+                "name": "Project Admin",
+                "id": "1"
+            },
+            "last_name": null,
+            "sms_mail_id": null,
+            "middle_name": null,
+            "created_by": null,
+            "ciid": "18",
+            "purchase_approval_limit": "-1.00",
+            "login_name": "administrator",
+            "phone": "1234455",
+            "sip_user": null,
+            "employee_id": "009",
+            "domain": null,
+            "name": "administrator",
+            "enable_telephony": false,
+            "status": "ACTIVE"
+        },
+        {
+            "email_id": null,
+            "extension": null,
+            "purchase_approver": null,
+            "ci_people_fields": {},
+            "description": "Help Desk Executive",
+            "is_vipuser": false,
+            "reporting_to": null,
+            "type": "Technician",
+            "citype": {
+                "name": "User",
+                "id": 3
+            },
+            "cost_per_hour": "0.00",
+            "ci_default_fields": {
+                "udf_pickref_1": null
+            },
+            "can_generate_authtoken": false,
+            "org_user_status": "ACTIVE",
+            "id": "6",
+            "department": null,
+            "first_name": null,
+            "service_request_approver": null,
+            "created_time": {
+                "display_value": "Mar 10, 2025 10:11 AM",
+                "value": "1741619519250"
+            },
+            "is_technician": true,
+            "jobtitle": null,
+            "mobile": "",
+            "profile_pic": {
+                "content-url": "/images/default-profile-pic2.svg"
+            },
+            "project_roles": null,
+            "last_name": null,
+            "sms_mail_id": null,
+            "middle_name": null,
+            "created_by": null,
+            "ciid": "19",
+            "purchase_approval_limit": null,
+            "login_name": null,
+            "phone": "925-852-2588",
+            "sip_user": null,
+            "employee_id": "010",
+            "domain": null,
+            "name": "Shawn Adams",
+            "enable_telephony": false,
+            "status": "ACTIVE"
+        },
+        {
+            "email_id": null,
+            "extension": null,
+            "purchase_approver": null,
+            "ci_people_fields": {},
+            "description": "Help Desk Executive",
+            "is_vipuser": false,
+            "reporting_to": null,
+            "type": "Technician",
+            "citype": {
+                "name": "User",
+                "id": 3
+            },
+            "cost_per_hour": "0.00",
+            "ci_default_fields": {
+                "udf_pickref_1": null
+            },
+            "can_generate_authtoken": false,
+            "org_user_status": "ACTIVE",
+            "id": "7",
+            "department": null,
+            "first_name": null,
+            "service_request_approver": null,
+            "created_time": {
+                "display_value": "Mar 10, 2025 10:11 AM",
+                "value": "1741619519250"
+            },
+            "is_technician": true,
+            "jobtitle": null,
+            "mobile": "",
+            "profile_pic": {
+                "content-url": "/images/default-profile-pic2.svg"
+            },
+            "project_roles": null,
+            "last_name": null,
+            "sms_mail_id": null,
+            "middle_name": null,
+            "created_by": null,
+            "ciid": "20",
+            "purchase_approval_limit": null,
+            "login_name": null,
+            "phone": "925-852-2602",
+            "sip_user": null,
+            "employee_id": "011",
+            "domain": null,
+            "name": "Heather Graham",
+            "enable_telephony": false,
+            "status": "ACTIVE"
+        },
+        {
+            "email_id": null,
+            "extension": null,
+            "purchase_approver": null,
+            "ci_people_fields": {},
+            "description": "Help Desk Executive",
+            "is_vipuser": false,
+            "reporting_to": null,
+            "type": "Technician",
+            "citype": {
+                "name": "User",
+                "id": 3
+            },
+            "cost_per_hour": "0.00",
+            "ci_default_fields": {
+                "udf_pickref_1": null
+            },
+            "can_generate_authtoken": false,
+            "org_user_status": "ACTIVE",
+            "id": "8",
+            "department": null,
+            "first_name": null,
+            "service_request_approver": null,
+            "created_time": {
+                "display_value": "Mar 10, 2025 10:11 AM",
+                "value": "1741619519250"
+            },
+            "is_technician": true,
+            "jobtitle": null,
+            "mobile": "",
+            "profile_pic": {
+                "content-url": "/images/default-profile-pic2.svg"
+            },
+            "project_roles": null,
+            "last_name": null,
+            "sms_mail_id": null,
+            "middle_name": null,
+            "created_by": null,
+            "ciid": "21",
+            "purchase_approval_limit": null,
+            "login_name": null,
+            "phone": "925-852-2592",
+            "sip_user": null,
+            "employee_id": "012",
+            "domain": null,
+            "name": "John Roberts",
+            "enable_telephony": false,
+            "status": "ACTIVE"
+        },
+        {
+            "email_id": null,
+            "extension": null,
+            "purchase_approver": null,
+            "ci_people_fields": {},
+            "description": "Help Desk Executive",
+            "is_vipuser": false,
+            "reporting_to": null,
+            "type": "Technician",
+            "citype": {
+                "name": "User",
+                "id": 3
+            },
+            "cost_per_hour": "0.00",
+            "ci_default_fields": {
+                "udf_pickref_1": null
+            },
+            "can_generate_authtoken": false,
+            "org_user_status": "ACTIVE",
+            "id": "9",
+            "department": null,
+            "first_name": null,
+            "service_request_approver": null,
+            "created_time": {
+                "display_value": "Mar 10, 2025 10:11 AM",
+                "value": "1741619519250"
+            },
+            "is_technician": true,
+            "jobtitle": null,
+            "mobile": "",
+            "profile_pic": {
+                "content-url": "/images/default-profile-pic2.svg"
+            },
+            "project_roles": null,
+            "last_name": null,
+            "sms_mail_id": null,
+            "middle_name": null,
+            "created_by": null,
+            "ciid": "22",
+            "purchase_approval_limit": null,
+            "login_name": null,
+            "phone": "925-852-2645",
+            "sip_user": null,
+            "employee_id": "013",
+            "domain": null,
+            "name": "Howard Stern",
+            "enable_telephony": false,
+            "status": "ACTIVE"
+        },
+        {
+            "email_id": null,
+            "extension": null,
+            "purchase_approver": null,
+            "ci_people_fields": {},
+            "description": "Help Desk Executive",
+            "is_vipuser": false,
+            "reporting_to": null,
+            "type": "Technician",
+            "citype": {
+                "name": "User",
+                "id": 3
+            },
+            "cost_per_hour": "0.00",
+            "ci_default_fields": {
+                "udf_pickref_1": null
+            },
+            "can_generate_authtoken": false,
+            "org_user_status": "ACTIVE",
+            "id": "10",
+            "department": null,
+            "first_name": null,
+            "service_request_approver": null,
+            "created_time": {
+                "display_value": "Mar 10, 2025 10:11 AM",
+                "value": "1741619519250"
+            },
+            "is_technician": true,
+            "jobtitle": null,
+            "mobile": "",
+            "profile_pic": {
+                "content-url": "/images/default-profile-pic2.svg"
+            },
+            "project_roles": null,
+            "last_name": null,
+            "sms_mail_id": null,
+            "middle_name": null,
+            "created_by": null,
+            "ciid": "23",
+            "purchase_approval_limit": null,
+            "login_name": null,
+            "phone": "925-852-2564",
+            "sip_user": null,
+            "employee_id": "014",
+            "domain": null,
+            "name": "Jeniffer Doe",
+            "enable_telephony": false,
+            "status": "ACTIVE"
+        },
+        {
+            "email_id": null,
+            "extension": null,
+            "purchase_approver": null,
+            "ci_people_fields": {},
+            "description": "-",
+            "is_vipuser": false,
+            "reporting_to": null,
+            "type": "Technician",
+            "citype": {
+                "name": "User",
+                "id": 3
+            },
+            "cost_per_hour": "0.00",
+            "ci_default_fields": {
+                "udf_pickref_1": null
+            },
+            "can_generate_authtoken": false,
+            "org_user_status": "ACTIVE",
+            "id": "301",
+            "department": null,
+            "first_name": "Stalin",
+            "service_request_approver": null,
+            "created_time": {
+                "display_value": "Mar 17, 2025 08:48 AM",
+                "value": "1742219290942"
+            },
+            "is_technician": true,
+            "jobtitle": null,
+            "mobile": null,
+            "profile_pic": {
+                "content-url": "/images/default-profile-pic2.svg"
+            },
+            "project_roles": null,
+            "last_name": "Crisanto",
+            "sms_mail_id": null,
+            "middle_name": "Oswaldo",
+            "created_by": {
+                "email_id": null,
+                "phone": "1234455",
+                "name": "administrator",
+                "mobile": "1234567890",
+                "profile_pic": {
+                    "content-url": "/images/default-profile-pic2.svg"
+                },
+                "is_vipuser": false,
+                "id": "5",
+                "department": null
+            },
+            "ciid": "301",
+            "purchase_approval_limit": null,
+            "login_name": null,
+            "phone": null,
+            "sip_user": null,
+            "employee_id": "001",
+            "domain": null,
+            "name": "Stalin Oswaldo Crisanto",
+            "enable_telephony": false,
+            "status": "ACTIVE"
+        }
+    ]
+}
