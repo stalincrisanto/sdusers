@@ -8,7 +8,7 @@
     "list_info": {
         "has_more_rows": false,
         "start_index": 1,
-        "row_count": 8
+        "row_count": 9
     },
     "users": [
         {
@@ -359,9 +359,9 @@
             "status": "ACTIVE"
         },
         {
-            "email_id": null,
+            "email_id": "stalincrisi13@gmail.com",
             "extension": null,
-            "purchase_approver": null,
+            "purchase_approver": false,
             "ci_people_fields": {},
             "description": "-",
             "is_vipuser": false,
@@ -378,7 +378,13 @@
             "can_generate_authtoken": false,
             "org_user_status": "ACTIVE",
             "id": "301",
-            "department": null,
+            "department": {
+                "department_head": null,
+                "site": null,
+                "is_deleted": false,
+                "name": "IT Services",
+                "id": "5"
+            },
             "first_name": "Stalin",
             "service_request_approver": null,
             "created_time": {
@@ -386,7 +392,7 @@
                 "value": "1742219290942"
             },
             "is_technician": true,
-            "jobtitle": null,
+            "jobtitle": "Desarrollador fullstack",
             "mobile": null,
             "profile_pic": {
                 "content-url": "/images/default-profile-pic2.svg"
@@ -408,13 +414,80 @@
                 "department": null
             },
             "ciid": "301",
-            "purchase_approval_limit": null,
+            "purchase_approval_limit": "-1.00",
             "login_name": null,
             "phone": null,
             "sip_user": null,
             "employee_id": "001",
             "domain": null,
             "name": "Stalin Oswaldo Crisanto",
+            "enable_telephony": false,
+            "status": "ACTIVE"
+        },
+        {
+            "email_id": null,
+            "extension": null,
+            "purchase_approver": null,
+            "ci_people_fields": {},
+            "description": "-",
+            "is_vipuser": false,
+            "reporting_to": null,
+            "type": "User",
+            "citype": {
+                "name": "User",
+                "id": 3
+            },
+            "cost_per_hour": "0.00",
+            "ci_default_fields": {
+                "udf_pickref_1": null
+            },
+            "can_generate_authtoken": false,
+            "org_user_status": "ACTIVE",
+            "id": "302",
+            "department": {
+                "department_head": null,
+                "site": null,
+                "is_deleted": false,
+                "name": "Engineering",
+                "id": "2"
+            },
+            "first_name": "Mónica",
+            "service_request_approver": null,
+            "created_time": {
+                "display_value": "Mar 17, 2025 10:31 AM",
+                "value": "1742225501904"
+            },
+            "is_technician": false,
+            "jobtitle": "QA",
+            "mobile": null,
+            "profile_pic": {
+                "content-url": "/images/default-profile-pic2.svg"
+            },
+            "project_roles": null,
+            "last_name": "Caiza",
+            "sms_mail_id": null,
+            "middle_name": null,
+            "created_by": {
+                "email_id": null,
+                "phone": "1234455",
+                "name": "administrator",
+                "mobile": "1234567890",
+                "profile_pic": {
+                    "content-url": "/images/default-profile-pic2.svg"
+                },
+                "is_vipuser": false,
+                "id": "5",
+                "department": null
+            },
+            "ciid": "302",
+            "purchase_approval_limit": null,
+            "login_name": null,
+            "requester_allowed_to_view": null,
+            "phone": null,
+            "sip_user": null,
+            "employee_id": "002",
+            "domain": null,
+            "name": "Mónica Caiza",
             "enable_telephony": false,
             "status": "ACTIVE"
         }

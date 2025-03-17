@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SI_EstrucOrgEmpleados_Req"
+    targetNamespace="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados"
+    xmlns:p1="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados"
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:documentation />
+    <wsp:UsingPolicy wsdl:required="true" />
+    <wsp:Policy wsu:Id="OP_SI_EstrucOrgEmpleados_Req" />
+    <wsdl:types>
+        <xsd:schema targetNamespace="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados">
+            <xsd:element name="MT_EstrucOrgEmpleados_Req" type="DT_EstrucOrgEmpleados_Req" />
+            <xsd:element name="MT_EstrucOrgEmpleados_Rsp" type="DT_EstrucOrgEmpleados_Rsp" />
+            <xsd:complexType name="DT_EstrucOrgEmpleados_Rsp">
+                <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/VersionID">
+                        0d9760ddfeb811efa0b600000014e4a2</xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="DATOS">
+                        <xsd:annotation>
+                            <xsd:appinfo source="http://sap.com/xi/TextID">
+                                1851ee57feb811efa3aac84bd6e46207</xsd:appinfo>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="ZNAME_EMP" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">
+                                            0da9384bfeb811efadcec84bd6e46207</xsd:appinfo>
+                                        <xsd:documentation>Nombre empleado</xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:string">
+                                            <xsd:maxLength value="250" />
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="ZTGEREN" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">
+                                            0da9384cfeb811efc4ecc84bd6e46207</xsd:appinfo>
+                                        <xsd:documentation>Gerencia empleado</xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:string">
+                                            <xsd:maxLength value="40" />
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="ZTORGEH" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">
+                                            0da9384dfeb811efb7a9c84bd6e46207</xsd:appinfo>
+                                        <xsd:documentation>Departamento o Unidad empleado</xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:string">
+                                            <xsd:maxLength value="40" />
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="ZTPLANS" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">
+                                            0da9384efeb811efb6c2c84bd6e46207</xsd:appinfo>
+                                        <xsd:documentation>Cargo empleado</xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:string">
+                                            <xsd:maxLength value="40" />
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="ZNAME_JF" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">
+                                            0da9384ffeb811efa614c84bd6e46207</xsd:appinfo>
+                                        <xsd:documentation>Nombre jefe</xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:string">
+                                            <xsd:maxLength value="250" />
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="ZTPLANS_JF" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">
+                                            0da93850feb811efaee7c84bd6e46207</xsd:appinfo>
+                                        <xsd:documentation>Cargo jefe</xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:string">
+                                            <xsd:maxLength value="40" />
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="RETORNO" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:appinfo source="http://sap.com/xi/TextID">
+                                1851ee5afeb811efaddcc84bd6e46207</xsd:appinfo>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="COD">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">
+                                            1851ee58feb811ef8dedc84bd6e46207</xsd:appinfo>
+                                        <xsd:documentation>Código retorno</xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:integer">
+                                            <xsd:totalDigits value="2" />
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="MSG">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">
+                                            1851ee59feb811efb21fc84bd6e46207</xsd:appinfo>
+                                        <xsd:documentation>Mensaje retorno</xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:string">
+                                            <xsd:maxLength value="100" />
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="DT_EstrucOrgEmpleados_Req">
+                <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/VersionID">
+                        3222b743ff8a11efc1b500000014e4a2</xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="N_EMPLEADO" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:appinfo source="http://sap.com/xi/TextID">
+                                832d6d0afeb611ef802dc84bd6e46207</xsd:appinfo>
+                            <xsd:documentation>Núm Empleado</xsd:documentation>
+                        </xsd:annotation>
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="8" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="CORREO_EMPLEADO" type="xsd:string" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:appinfo source="http://sap.com/xi/TextID">
+                                832d6d0bfeb611ef8685c84bd6e46207</xsd:appinfo>
+                            <xsd:documentation>Correo empleado</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="MT_EstrucOrgEmpleados_Req">
+        <wsdl:documentation />
+        <wsdl:part name="MT_EstrucOrgEmpleados_Req" element="p1:MT_EstrucOrgEmpleados_Req" />
+    </wsdl:message>
+    <wsdl:message name="MT_EstrucOrgEmpleados_Rsp">
+        <wsdl:documentation />
+        <wsdl:part name="MT_EstrucOrgEmpleados_Rsp" element="p1:MT_EstrucOrgEmpleados_Rsp" />
+    </wsdl:message>
+    <wsdl:portType name="SI_EstrucOrgEmpleados_Req">
+        <wsdl:documentation />
+        <wsdl:operation name="SI_EstrucOrgEmpleados_Req">
+            <wsdl:documentation />
+            <wsp:Policy>
+                <wsp:PolicyReference URI="#OP_SI_EstrucOrgEmpleados_Req" />
+            </wsp:Policy>
+            <wsdl:input message="p1:MT_EstrucOrgEmpleados_Req" />
+            <wsdl:output message="p1:MT_EstrucOrgEmpleados_Rsp" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SI_EstrucOrgEmpleados_ReqBinding" type="p1:SI_EstrucOrgEmpleados_Req">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"
+            xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+        <wsdl:operation name="SI_EstrucOrgEmpleados_Req">
+            <soap:operation soapAction="http://sap.com/xi/WebService/soap1.1"
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            <wsdl:input>
+                <soap:body use="literal" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SI_EstrucOrgEmpleados_ReqService">
+        <wsdl:port name="HTTP_Port" binding="p1:SI_EstrucOrgEmpleados_ReqBinding">
+            <soap:address
+                location="http://srvpiqas.emaapq.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BS_INTRANET_QAS&amp;receiverParty=&amp;receiverService=&amp;interface=SI_EstrucOrgEmpleados_Req&amp;interfaceNamespace=urn%3Aepmaps.com%3AINTRANET%3AERP%3AEstrucOrgEmpleados"
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+        </wsdl:port>
+        <wsdl:port name="HTTPS_Port" binding="p1:SI_EstrucOrgEmpleados_ReqBinding">
+            <soap:address
+                location="https://srvpiqas.emaapq.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BS_INTRANET_QAS&amp;receiverParty=&amp;receiverService=&amp;interface=SI_EstrucOrgEmpleados_Req&amp;interfaceNamespace=urn%3Aepmaps.com%3AINTRANET%3AERP%3AEstrucOrgEmpleados"
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
