@@ -1,0 +1,59 @@
+<SOAP:Envelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/">
+   <SOAP:Header/>
+   <SOAP:Body xmlns:urn="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados">
+      <ns0:MT_EstrucOrgEmpleados_Rsp xmlns:ns0="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados">
+         <DATOS>
+            <ZNAME_EMP>WASHINGTON ALEJANDRO PILLIGUA CHILIGUANO</ZNAME_EMP>
+            <ZTORGEH>DPTO INFRAESTRUCTURA Y SEG INFORMATICA</ZTORGEH>
+            <ZNAME_JF>WENCESLAO RAFAEL RUIZ SANCHEZ</ZNAME_JF>
+            <ZTPLANS_JF>FUNCIONARIO 7 (JEFE DPTO)</ZTPLANS_JF>
+         </DATOS>
+         <RETORNO>
+            <COD>0</COD>
+            <MSG>Información obtenida con éxito</MSG>
+         </RETORNO>
+      </ns0:MT_EstrucOrgEmpleados_Rsp>
+   </SOAP:Body>
+</SOAP:Envelope>
+
+<!--  -->
+<SOAP:Envelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/">
+   <SOAP:Header/>
+   <SOAP:Body xmlns:urn="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados">
+      <ns0:MT_EstrucOrgEmpleados_Rsp xmlns:ns0="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados">
+         <DATOS>
+            <ZNAME_EMP>NELLY KATHERINE MERA PEREIRA</ZNAME_EMP>
+            <ZTGEREN>GERENCIA DE TECNOLOGIA DE INFORMACIÓN</ZTGEREN>
+            <ZTORGEH>DPTO SOSTENIB PLATAFORMA EMPRES ERP/ISU</ZTORGEH>
+            <ZTPLANS>FUNCIONARIO 1</ZTPLANS>
+            <ZNAME_JF>PAUL EDUARDO VALLEJO SALAZAR</ZNAME_JF>
+            <ZTPLANS_JF>FUNCIONARIO 7 (JEFE DPTO)</ZTPLANS_JF>
+         </DATOS>
+         <RETORNO>
+            <COD>0</COD>
+            <MSG>Información obtenida con éxito</MSG>
+         </RETORNO>
+      </ns0:MT_EstrucOrgEmpleados_Rsp>
+   </SOAP:Body>
+</SOAP:Envelope>
+
+<!--  -->
+<SOAP:Envelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/">
+   <SOAP:Header/>
+   <SOAP:Body xmlns:urn="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados">
+      <ns0:MT_EstrucOrgEmpleados_Rsp xmlns:ns0="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados">
+         <DATOS>
+            <ZNAME_EMP>LUIS ARMANDO GUILCAPI ORTEGA</ZNAME_EMP>
+            <ZTGEREN>GERENCIA DE TECNOLOGIA DE INFORMACIÓN</ZTGEREN>
+            <ZTORGEH>DPTO INFRAESTRUCTURA Y SEG INFORMATICA</ZTORGEH>
+            <ZTPLANS>TECNICO ELECTRONICO</ZTPLANS>
+            <ZNAME_JF>WENCESLAO RAFAEL RUIZ SANCHEZ</ZNAME_JF>
+            <ZTPLANS_JF>FUNCIONARIO 7 (JEFE DPTO)</ZTPLANS_JF>
+         </DATOS>
+         <RETORNO>
+            <COD>0</COD>
+            <MSG>Información obtenida con éxito</MSG>
+         </RETORNO>
+      </ns0:MT_EstrucOrgEmpleados_Rsp>
+   </SOAP:Body>
+</SOAP:Envelope>

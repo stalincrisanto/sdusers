@@ -1,0 +1,27 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope">
+    <soapenv:Header>
+    <soapenv:Body>
+        <urn:MT_EstrucOrgEmpleados_Req>
+            <CORREO_EMPLEADO>katherine.mera@aguaquito.gob.ec</CORREO_EMPLEADO>
+        </urn:MT_EstrucOrgEmpleados_Req>    
+    </soapenv:Body>
+    </soapenv:Header>
+</soapenv:>
+
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope">
+    <soapenv:Header>
+    <soapenv:Body xmlns:urn="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados">
+        <ns0:MT_EstrucOrgEmpleados_Rsp xmlns:ns0="urn:epmaps.com:INTRANET:ERP:EstrucOrgEmpleados">
+            <DATOS>
+                <ZNAME_EMP>Stalin Crisanto</ZNAME_EMP>
+                <ZTPLANS>Funcionario 1</ZTPLANS>
+            </DATOS>
+            <RETORNO>
+                <COD>0</COD>
+                <MSG>Información obtenida con éxito</MSG>
+            </RETORNO>
+        </ns0:MT_EstrucOrgEmpleados_Rsp>    
+    </soapenv:Body>
+    </soapenv:Header>
+</soapenv:>

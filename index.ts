@@ -41,13 +41,15 @@ app.get("/usuarios", async (req: Request, res: Response) => {
       },
       httpsAgent,
     });
-    const fullResponse: ResponseSD = response.data;
-    const users = fullResponse.users.map(({ name, last_name, email_id }) => ({
-      name,
-      last_name,
-      email_id,
-    }));
-    res.json(users);
+    console.log("response------------->", response);
+    // const fullResponse: ResponseSD = response.data;
+    // const users = fullResponse.users.map(({ name, last_name, email_id }) => ({
+    //   name,
+    //   last_name,
+    //   email_id,
+    // }));
+    // res.json(users);
+    res.json({});
   } catch (error) {
     res.status(500).send(`Error al obtener los usuarios ${error}`);
   }
