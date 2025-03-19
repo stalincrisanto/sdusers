@@ -1,0 +1,11 @@
+{
+    "scripts": "dist/index.js",
+    "assets": [
+        "node_modules/**/*",
+        "src/**/*"
+    ],
+    "targets": [
+        "node16-win-x64"
+    ],
+    "output": "ejecutable.exe"
+}

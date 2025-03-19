@@ -1,0 +1,21 @@
+{
+    "name": "service-desk-test",
+    "main": "dist/index.js",
+    "scripts": {
+      "start": "node dist/index.js",
+      "build": "pkg dist/index.js --config pkg-config.json --output ejecutable.exe"
+    },
+    "private": true,
+    "devDependencies": {
+      "@types/bun": "latest"
+    },
+    "peerDependencies": {
+      "typescript": "^5"
+    },
+    "dependencies": {
+      "axios": "^1.3.4",
+      "soap": "^1.1.10",
+      "winston": "^3.17.0"
+    }
+  }
+  
