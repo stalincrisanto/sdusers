@@ -3,8 +3,8 @@ import { getUsersFromServiceDesk } from "./serviceDeskClient";
 import { logger } from "./utils/logger";
 
 export const main = async () => {
-  // const allUsers = await getUsersFromServiceDesk();
-  await getInfoUserEmpams("katherine.mera@aguaquito.gob.ec");
+  await getUsersFromServiceDesk();
+  // await getInfoUserEmpams("katherine.mera@aguaquito.gob.ec");
 };
 try {
   main();

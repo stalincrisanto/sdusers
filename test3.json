@@ -40,3 +40,5 @@
       "email_id": "christian.zapata@aguaquito.gob.ec"
     }
   ]
+
+{"list_info": {"start_index": 1,"sort_order": "asc","row_count": "25","get_total_count": true,},"fields_required": ["name","email_id"]}
