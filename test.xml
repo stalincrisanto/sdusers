@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml version="1.0" encoding="UTF-8"?>
 <API version="1.0" locale="en">
     <citype>
         <name>Department</name>
@@ -14,10 +14,58 @@
             <name>CI Name</name>
             <name>CI Type</name>
         </returnFields>
-        <!-- If the total number pages is 100, we can give the navigation from 50 to 50 -->
         <range>
             <startindex>1</startindex>
             <limit>50</limit>
         </range>
     </citype>
+</API> -->
+
+<API version='1.0' locale='en'>
+    <records>
+        <record>
+            <parameter>
+                <name>CI Name</name>
+                <value>Departamento 1</value>
+            </parameter>
+            <parameter>
+                <name>CI Type</name>
+                <value>Department</value>
+            </parameter>
+            <parameter>
+                <name>Site</name>
+                <value>(empty)</value>
+            </parameter>
+            <parameter>
+                <name>Business Impact</name>
+                <value>(empty)</value>
+            </parameter>
+            <parameter>
+                <name>Description</name>
+                <value>(empty)</value>
+            </parameter>
+        </record>
+        <record>
+            <parameter>
+                <name>CI Name</name>
+                <value>Departamento 2</value>
+            </parameter>
+            <parameter>
+                <name>CI Type</name>
+                <value>Department</value>
+            </parameter>
+            <parameter>
+                <name>Site</name>
+                <value>(empty)</value>
+            </parameter>
+            <parameter>
+                <name>Business Impact</name>
+                <value>(empty)</value>
+            </parameter>
+            <parameter>
+                <name>Description</name>
+                <value>(empty)</value>
+            </parameter>
+        </record>
+    </records>
 </API>

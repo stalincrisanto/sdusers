@@ -74,40 +74,6 @@ export const getUsersFromServiceDesk = async () => {
       await Promise.all(promises);
     }
 
-    // console.log("----->", await Promise.all(promises));
-
-    // const userTest = allUsersEmails.find(
-    //   ({ email_id }) => email_id === "stalincrisi13@gmail.com"
-    // );
-
-    // const dataFromEpmaps: UserEpmap | undefined = await getInfoUserEmpams(
-    //   userTest?.email_id!
-    // );
-
-    // console.log("---->", dataFromEpmaps);
-
-    // let data = JSON.stringify({
-    //   input_data: `{"user":{"jobtitle":"${dataFromEpmaps?.ZTPLANS_JF}"}}`,
-    // });
-
-    // const responseUpdate = await axios.put(
-    //   `${URL_API}/${userTest?.id}`,
-    //   new URLSearchParams({
-    //     'input_data': JSON.stringify({
-    //       user: {
-    //         jobtitle: dataFromEpmaps?.ZTPLANS
-    //       }
-    //     })
-    //   }),
-    //   {
-    //     headers: {
-    //       authtoken: API_KEY_SERVICEDESK,
-    //       'Content-Type': 'application/x-www-form-urlencoded',
-    //     },
-    //     httpsAgent,  // Este valor debe estar definido previamente
-    //   }
-    // );
-
     // fs.writeFileSync(OUTPUT_FILE, JSON.stringify(allUsersEmails, null, 2));
     // logger.info(`Resultado guardado en ${OUTPUT_FILE}`);
     // logger.info("Proceso completado con éxito.");
