@@ -1,9 +1,11 @@
+import { departmentsProcess } from "./departmentsProcess";
 import { getInfoUserEmpams } from "./epmapsClient";
 import { getUsersFromServiceDesk } from "./serviceDeskClient";
 import { logger } from "./utils/logger";
 
 export const main = async () => {
-  await getUsersFromServiceDesk();
+  await departmentsProcess();
+  // await getUsersFromServiceDesk();
   // await getInfoUserEmpams("katherine.mera@aguaquito.gob.ec");
 };
 try {
