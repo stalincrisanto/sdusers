@@ -1,6 +1,6 @@
 import { departmentsProcess } from "./departmentsProcess";
-import { getInfoUserEmpams } from "./epmapsClient";
 import { getUsersFromServiceDesk } from "./serviceDeskClient";
+import { getInfoUserEmpams } from "./tasks/epmaps/epmapsTasks";
 import {
   createDepartments,
   getDepartments,
@@ -13,8 +13,10 @@ export const main = async () => {
   try {
     const departmentsSdp = await getDepartments();
     const usersSdp = await getUsers();
-    await createDepartments(departmentsSdp, usersSdp);
-    await updateUsers(usersSdp);
+    logger.info(`USUARIOS QUE VINIERON DESDE SERVICE DESK ${JSON.stringify(usersSdp)}`);
+    // await createDepartments(departmentsSdp, usersSdp);
+    // await updateUsers(usersSdp);
+    // ESTO NO VA: await getInfoUserEmpams("alex.pozo@aguaquito.gob.ec");
   } catch (error) {
     logger.info(`Ha ocurrido un error al ejecutar el proceso: ${error}`);
   }

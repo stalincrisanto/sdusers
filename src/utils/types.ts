@@ -8,6 +8,7 @@ export interface ListInfo {
   has_more_rows: boolean;
   start_index: number;
   row_count: number;
+  total_count: number;
 }
 
 export interface ResponseStatus {
