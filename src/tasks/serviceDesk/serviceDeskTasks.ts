@@ -51,11 +51,6 @@ export const getUsers = async () => {
         .map(({ id, email_id, name }) => ({ id, email_id, name }));
 
       allUsers.push(...batchUsers);
-      logger.info(
-        `Obtenidos ${batchUsers.length} usuarios (lote ${startIndex}-${
-          startIndex + batchSize - 1
-        })`
-      );
 
       // Verificamos si debemos continuar
       startIndex += batchSize;
@@ -159,53 +154,54 @@ export const getDepartments = async (): Promise<string[]> => {
   }
 };
 
-export const createDepartments = async (
-  departmentsSdp: string[],
-  usersSdp: UserSdp[]
-): Promise<void> => {
+// export const createDepartments = async (
+//   departmentsSdp: string[],
+//   usersSdp: UserSdp[]
+// ): Promise<void> => {
+//   try {
+//     const userEpmapsPromises = usersSdp.map(({ email_id }) =>
+//       getInfoUserEmpams(email_id!)
+//     );
+//     const users = await Promise.all(userEpmapsPromises);
+
+//     const departmentsEpmaps = Array.from(
+//       new Set(users.map((userEpmap) => [userEpmap?.ZTORGEH]).flat())
+//     ).filter((department) => department !== undefined);
+
+//     const departmentsToCreate = departmentsEpmaps.filter(
+//       (department) => !departmentsSdp.includes(department!)
+//     );
+
+//     if (departmentsToCreate.length > 0) {
+//       const INPUT_DATA = generateCreateDepartmentsXml(
+//         departmentsToCreate as string[]
+//       );
+//       const dataForAddDepartments = new URLSearchParams({
+//         OPERATION_NAME: "add",
+//         INPUT_DATA,
+//       });
+//       await addDepartmentToSdp(dataForAddDepartments);
+//     }
+//   } catch (error) {
+//     logger.error(`Se ha producido un error ${error}`);
+//   }
+// };
+
+export const addDepartmentToSdp = async (dataForAddDepartments: URLSearchParams) => {
   try {
-    const userEpmapsPromises = usersSdp.map(({ email_id }) =>
-      getInfoUserEmpams(email_id!)
+    await axios.post(
+      `${SERVICE_DESK_API_URL}/cmdb/ci`,
+      dataForAddDepartments,
+      {
+        headers: {
+          authtoken: API_KEY_SERVICEDESK,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        httpsAgent,
+      }
     );
-    const users = await Promise.all(userEpmapsPromises);
-
-    const departmentsEpmaps = Array.from(
-      new Set(users.map((userEpmap) => [userEpmap?.ZTORGEH]).flat())
-    ).filter((department) => department !== undefined);
-
-    const departmentsToCreate = departmentsEpmaps.filter(
-      (department) => !departmentsSdp.includes(department!)
-    );
-
-    if (departmentsToCreate.length > 0) {
-      const INPUT_DATA = generateCreateDepartmentsXml(
-        departmentsToCreate as string[]
-      );
-      const dataForAddDepartments = new URLSearchParams({
-        OPERATION_NAME: "add",
-        INPUT_DATA,
-      });
-      await addDepartmentToSdp(dataForAddDepartments);
-    }
+    logger.info("Se han actualizado los departamentos correctamente");
   } catch (error) {
-    logger.error(`Se ha producido un error ${error}`);
+    logger.error(`Se ha producido un error al guardar los departamentos: ${error}`)
   }
-};
-
-const addDepartmentToSdp = async (dataForAddDepartments: URLSearchParams) => {
-  const departmentsAddResponse = await axios.post(
-    `${SERVICE_DESK_API_URL}/cmdb/ci`,
-    dataForAddDepartments,
-    {
-      headers: {
-        authtoken: API_KEY_SERVICEDESK,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      httpsAgent,
-    }
-  );
-  console.log(
-    "departmentsAddResponse",
-    departmentsAddResponse.data.API.response.operation.result.statuscode
-  );
 };
