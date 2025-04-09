@@ -1,5 +1,5 @@
 import { logger } from "../../utils/logger";
-import { UserEpmap, UserSdp } from "../../utils/types";
+import { UserEpmap, UserEpmapWithEmail, UserSdp } from "../../utils/types";
 import { getInfoUserEmpams } from "../epmaps/epmapsTasks";
 import { generateCreateDepartmentsXml } from "./generateXML";
 import { addDepartmentToSdp } from "./serviceDeskTasks";
@@ -9,9 +9,10 @@ const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 export const createDepartments = async (
   departmentsSdp: string[],
   usersSdp: UserSdp[]
-): Promise<void> => {
-  const BATCH_SIZE = 20; // Puedes ajustar esto según rendimiento/pruebas
+): Promise<UserEpmap[] | null> => {
+  const BATCH_SIZE = 10; // Puedes ajustar esto según rendimiento/pruebas
   const users: (UserEpmap | null)[] = [];
+  const usersDataToUpdate: (UserEpmapWithEmail | null)[] = [];
 
   try {
     for (let i = 0; i < usersSdp.length; i += BATCH_SIZE) {
@@ -19,7 +20,13 @@ export const createDepartments = async (
 
       const batchPromises = batch.map(async ({ email_id }) => {
         try {
-          return await withTimeout(getInfoUserEmpams(email_id!), 10000); // 10s
+          // return await withTimeout(getInfoUserEmpams(email_id!), 5000); // 5s
+          const userInfo = await withTimeout(
+            getInfoUserEmpams(email_id!),
+            10000
+          ); // 5s
+          // Agregar el email al objeto devuelto por getInfoUserEmpams
+          return userInfo ? { ...userInfo, EMAIL: email_id } : null;
         } catch (err) {
           logger.error(`Timeout o error con usuario ${email_id}: ${err}`);
           return null;
@@ -29,8 +36,14 @@ export const createDepartments = async (
       const batchResults = await Promise.all(batchPromises);
       users.push(...batchResults);
 
+      logger.info(
+        `PROCESADO EL SIGUIENTE LOTE DE USUARIOS EN DEPARTAMENTOS ${JSON.stringify(
+          batchResults
+        )}`
+      );
+
       // Optional: agregar pequeño delay para dar respiro al servidor SOAP
-      await delay(200); // 200ms entre lotes
+      await delay(2000); // 200ms entre lotes
     }
 
     const departmentsEpmaps = Array.from(
@@ -51,8 +64,13 @@ export const createDepartments = async (
       });
       await addDepartmentToSdp(dataForAddDepartments);
     }
+    logger.info(
+      `CANTIDAD DE USUARIOS PROCESADOS PARA DEPARTAMENTOS ${users.length}`
+    );
+    return users.filter((user) => user !== null) as UserEpmap[];
   } catch (error) {
     logger.error(`Se ha producido un error ${error}`);
+    return null;
   }
 };
 

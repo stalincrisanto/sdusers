@@ -47,8 +47,11 @@ export const getUsers = async () => {
       }
 
       // Procesamos los usuarios del batch actual
-      const batchUsers = responseData.users
-        .map(({ id, email_id, name }) => ({ id, email_id, name }));
+      const batchUsers = responseData.users.map(({ id, email_id, name }) => ({
+        id,
+        email_id,
+        name,
+      }));
 
       allUsers.push(...batchUsers);
 
@@ -67,49 +70,112 @@ export const getUsers = async () => {
   }
 };
 
-export const updateUsers = async (usersSdp: UserSdp[]) => {
-  try {
-    const promises = usersSdp.map(({ id, email_id }) => {
-      if (email_id) {
-        return getInfoUserEmpams(email_id).then(async (userFromEpmap) => {
-          const responseUpdate = await axios.put(
-            `${SERVICE_DESK_API_URL}/v3/users/${id}`,
-            new URLSearchParams({
-              input_data: JSON.stringify({
-                user: {
-                  ...(userFromEpmap?.ZTPLANS && {
-                    jobtitle: userFromEpmap.ZTPLANS,
-                  }),
-                  ...(userFromEpmap?.ZTORGEH && {
-                    department: {
-                      name: userFromEpmap.ZTORGEH,
-                    },
-                  }),
-                },
-              }),
-            }),
-            {
-              headers: {
-                authtoken: API_KEY_SERVICEDESK,
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-              httpsAgent,
-            }
-          );
-          return responseUpdate;
-        });
-      }
-      return Promise.resolve();
-    });
+// export const updateUsers = async (
+//   usersSdp: UserSdp[],
+//   usersEpmaps: UserEpmap[]
+// ) => {
+//   try {
 
-    if (promises.length > 0) {
-      await Promise.all(promises);
-    }
-  } catch (error) {
-    console.log("---------ME ESTA DANDO ERROR EN EL MODIFICAR USUARIOS", error);
-    // throw new Error(`${error}`);
-  }
-};
+
+
+//     const promises = usersSdp.map(({ id, email_id }) => {
+//       if (email_id) {
+//         return getInfoUserEmpams(email_id).then(async (userFromEpmap) => {
+//           const responseUpdate = await axios.put(
+//             `${SERVICE_DESK_API_URL}/v3/users/${id}`,
+//             new URLSearchParams({
+//               input_data: JSON.stringify({
+//                 user: {
+//                   ...(userFromEpmap?.ZTPLANS && {
+//                     jobtitle: userFromEpmap.ZTPLANS,
+//                   }),
+//                   ...(userFromEpmap?.ZTORGEH && {
+//                     department: {
+//                       name: userFromEpmap.ZTORGEH,
+//                     },
+//                   }),
+//                 },
+//               }),
+//             }),
+//             {
+//               headers: {
+//                 authtoken: API_KEY_SERVICEDESK,
+//                 "Content-Type": "application/x-www-form-urlencoded",
+//               },
+//               httpsAgent,
+//             }
+//           );
+//           return responseUpdate;
+//         });
+//       }
+//       return Promise.resolve();
+//     });
+
+//     if (promises.length > 0) {
+//       await Promise.all(promises);
+//       logger.info("====================Usuarios modificados=================");
+//     }
+//   } catch (error) {
+//     logger.error(`ERROR AL MODIFICAR EL USUARIO`);
+//     throw new Error(`${error}`);
+//   }
+// };
+
+
+// export const updateUsers = async (
+//   usersSdp: UserSdp[],
+//   usersEpmaps: UserEpmap[]
+// ) => {
+//   try {
+//     const limit = pLimit(10); // máximo 10 peticiones a la vez
+
+//     const tasks = usersSdp.map(({ id, email_id }) =>
+//       limit(async () => {
+//         if (!email_id) return;
+
+//         const userFromEpmap = usersEpmaps.find(
+//           (user) => user.EMAIL?.toLowerCase() === email_id.toLowerCase()
+//         );
+
+//         if (!userFromEpmap) return;
+
+//         const responseUpdate = await axios.put(
+//           `${SERVICE_DESK_API_URL}/v3/users/${id}`,
+//           new URLSearchParams({
+//             input_data: JSON.stringify({
+//               user: {
+//                 ...(userFromEpmap.ZTPLANS && {
+//                   jobtitle: userFromEpmap.ZTPLANS,
+//                 }),
+//                 ...(userFromEpmap.ZTORGEH && {
+//                   department: {
+//                     name: userFromEpmap.ZTORGEH,
+//                   },
+//                 }),
+//               },
+//             }),
+//           }),
+//           {
+//             headers: {
+//               authtoken: API_KEY_SERVICEDESK,
+//               "Content-Type": "application/x-www-form-urlencoded",
+//             },
+//             httpsAgent,
+//           }
+//         );
+
+//         return responseUpdate;
+//       })
+//     );
+
+//     await Promise.all(tasks);
+//     logger.info("===========Usuarios modificados===========");
+//   } catch (error) {
+//     logger.error("ERROR AL MODIFICAR EL USUARIO");
+//     throw new Error(`${error}`);
+//   }
+// };
+
 
 export const getDepartments = async (): Promise<string[]> => {
   try {
@@ -187,21 +253,21 @@ export const getDepartments = async (): Promise<string[]> => {
 //   }
 // };
 
-export const addDepartmentToSdp = async (dataForAddDepartments: URLSearchParams) => {
+export const addDepartmentToSdp = async (
+  dataForAddDepartments: URLSearchParams
+) => {
   try {
-    await axios.post(
-      `${SERVICE_DESK_API_URL}/cmdb/ci`,
-      dataForAddDepartments,
-      {
-        headers: {
-          authtoken: API_KEY_SERVICEDESK,
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        httpsAgent,
-      }
-    );
+    await axios.post(`${SERVICE_DESK_API_URL}/cmdb/ci`, dataForAddDepartments, {
+      headers: {
+        authtoken: API_KEY_SERVICEDESK,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      httpsAgent,
+    });
     logger.info("Se han actualizado los departamentos correctamente");
   } catch (error) {
-    logger.error(`Se ha producido un error al guardar los departamentos: ${error}`)
+    logger.error(
+      `Se ha producido un error al guardar los departamentos: ${error}`
+    );
   }
 };

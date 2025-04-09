@@ -102,6 +102,16 @@ export interface UserEpmap {
   ZTPLANS_JF: string;
 }
 
+export interface UserEpmapWithEmail {
+  ZNAME_EMP: string;
+  ZTGEREN: string;
+  ZTORGEH: string;
+  ZTPLANS: string;
+  ZNAME_JF: string;
+  ZTPLANS_JF: string;
+  EMAIL: string;
+}
+
 export interface UserSdp {
   id: string;
   email_id: null;

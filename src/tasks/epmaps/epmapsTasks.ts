@@ -28,9 +28,9 @@ export const getInfoUserEmpams = async (email: string) => {
     const [response] = await client.SI_EstrucOrgEmpleados_ReqAsync(args);
 
     const user: UserEpmap = response.DATOS;
-    logger.info(
-      `EMPLEADO OBTENIDO CON ÉXITO ${JSON.stringify(response.DATOS)}`
-    );
+    // logger.info(
+    //   `EMPLEADO OBTENIDO CON ÉXITO ${JSON.stringify(response.DATOS)}`
+    // );
     return user;
   } catch (error) {
     logger.error(`ERROR AL OBTENER DATOS DEL SERVICIO SOAP ${error}`);
