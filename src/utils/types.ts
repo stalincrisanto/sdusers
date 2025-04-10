@@ -117,3 +117,13 @@ export interface UserSdp {
   email_id: null;
   name: string;
 };
+
+export interface UserSdpComplete {
+  id: string;
+  email_id: null;
+  name: string;
+  jobtitle?: string;
+  department?: {
+    name: string;
+  }
+};

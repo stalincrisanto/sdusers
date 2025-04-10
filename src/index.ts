@@ -6,6 +6,7 @@ import {
   getDepartments,
   getUsers
 } from "./tasks/serviceDesk/serviceDeskTasks";
+import { updateUsers } from "./tasks/serviceDesk/updateUsers";
 import { logger } from "./utils/logger";
 
 export const main = async () => {
@@ -13,9 +14,9 @@ export const main = async () => {
     const departmentsSdp = await getDepartments();
     const usersSdp = await getUsers();
     const usersEpmaps = await createDepartments(departmentsSdp, usersSdp);
-    logger.info(`USUARIOS QUE TRAIGO DESDE EPMAPS ${JSON.stringify(usersEpmaps)}`);
+    logger.info(`Departamentos actualizados correctamente`);
     logger.info(`USUARIOS QUE TRAIGO DESDE EPMAPS ========== ${usersEpmaps?.length}`);
-    // await updateUsers(usersSdp, usersEpmaps!);
+    await updateUsers(usersSdp, usersEpmaps!);
     logger.info("Proceso finalizado CORRECTAMENTE");
   } catch (error) {
     logger.info(`Ha ocurrido un error al ejecutar el proceso: ${error}`);

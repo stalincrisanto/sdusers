@@ -9,10 +9,9 @@ const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 export const createDepartments = async (
   departmentsSdp: string[],
   usersSdp: UserSdp[]
-): Promise<UserEpmap[] | null> => {
+): Promise<UserEpmapWithEmail[] | null> => {
   const BATCH_SIZE = 10; // Puedes ajustar esto según rendimiento/pruebas
   const users: (UserEpmap | null)[] = [];
-  const usersDataToUpdate: (UserEpmapWithEmail | null)[] = [];
 
   try {
     for (let i = 0; i < usersSdp.length; i += BATCH_SIZE) {
@@ -28,7 +27,7 @@ export const createDepartments = async (
           // Agregar el email al objeto devuelto por getInfoUserEmpams
           return userInfo ? { ...userInfo, EMAIL: email_id } : null;
         } catch (err) {
-          logger.error(`Timeout o error con usuario ${email_id}: ${err}`);
+          // logger.error(`Timeout o error con usuario ${email_id}: ${err}`);
           return null;
         }
       });
@@ -37,9 +36,7 @@ export const createDepartments = async (
       users.push(...batchResults);
 
       logger.info(
-        `PROCESADO EL SIGUIENTE LOTE DE USUARIOS EN DEPARTAMENTOS ${JSON.stringify(
-          batchResults
-        )}`
+        `Se han procesado ${batchResults.length} usuarios`
       );
 
       // Optional: agregar pequeño delay para dar respiro al servidor SOAP
@@ -64,10 +61,8 @@ export const createDepartments = async (
       });
       await addDepartmentToSdp(dataForAddDepartments);
     }
-    logger.info(
-      `CANTIDAD DE USUARIOS PROCESADOS PARA DEPARTAMENTOS ${users.length}`
-    );
-    return users.filter((user) => user !== null) as UserEpmap[];
+    
+    return users.filter((user) => user !== null) as UserEpmapWithEmail[];
   } catch (error) {
     logger.error(`Se ha producido un error ${error}`);
     return null;

@@ -2,11 +2,10 @@ import https from "https";
 import axios from "axios";
 import { configDev, configProd } from "../../config/config";
 import { dataForGetDepartments } from "./consts";
-import { ResponseSDP, UserEpmap, UserSdp } from "../../utils/types";
+import { ResponseSDP, UserEpmap, UserEpmapWithEmail, UserSdp } from "../../utils/types";
 import { getInfoUserEmpams } from "../epmaps/epmapsTasks";
 import { generateCreateDepartmentsXml } from "./generateXML";
 import { logger } from "../../utils/logger";
-
 const { SERVICE_DESK_API_URL, API_KEY_SERVICEDESK } = configProd;
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
@@ -76,8 +75,6 @@ export const getUsers = async () => {
 // ) => {
 //   try {
 
-
-
 //     const promises = usersSdp.map(({ id, email_id }) => {
 //       if (email_id) {
 //         return getInfoUserEmpams(email_id).then(async (userFromEpmap) => {
@@ -122,61 +119,6 @@ export const getUsers = async () => {
 // };
 
 
-// export const updateUsers = async (
-//   usersSdp: UserSdp[],
-//   usersEpmaps: UserEpmap[]
-// ) => {
-//   try {
-//     const limit = pLimit(10); // máximo 10 peticiones a la vez
-
-//     const tasks = usersSdp.map(({ id, email_id }) =>
-//       limit(async () => {
-//         if (!email_id) return;
-
-//         const userFromEpmap = usersEpmaps.find(
-//           (user) => user.EMAIL?.toLowerCase() === email_id.toLowerCase()
-//         );
-
-//         if (!userFromEpmap) return;
-
-//         const responseUpdate = await axios.put(
-//           `${SERVICE_DESK_API_URL}/v3/users/${id}`,
-//           new URLSearchParams({
-//             input_data: JSON.stringify({
-//               user: {
-//                 ...(userFromEpmap.ZTPLANS && {
-//                   jobtitle: userFromEpmap.ZTPLANS,
-//                 }),
-//                 ...(userFromEpmap.ZTORGEH && {
-//                   department: {
-//                     name: userFromEpmap.ZTORGEH,
-//                   },
-//                 }),
-//               },
-//             }),
-//           }),
-//           {
-//             headers: {
-//               authtoken: API_KEY_SERVICEDESK,
-//               "Content-Type": "application/x-www-form-urlencoded",
-//             },
-//             httpsAgent,
-//           }
-//         );
-
-//         return responseUpdate;
-//       })
-//     );
-
-//     await Promise.all(tasks);
-//     logger.info("===========Usuarios modificados===========");
-//   } catch (error) {
-//     logger.error("ERROR AL MODIFICAR EL USUARIO");
-//     throw new Error(`${error}`);
-//   }
-// };
-
-
 export const getDepartments = async (): Promise<string[]> => {
   try {
     const response = await axios.post(
@@ -197,14 +139,14 @@ export const getDepartments = async (): Promise<string[]> => {
     const statusCode = data.API.response.operation.result.statuscode;
     const message = data.API.response.operation.result.message;
     if (statusCode !== 200) {
-      logger.error(`Error: Received status code ${statusCode} - ${message}`);
+      logger.error(`Error al recibir departamentos: ${statusCode} - ${message}`);
       return [];
     }
 
     const departmentsData =
       data.API.response.operation.Details["field-values"]?.record;
     if (!departmentsData) {
-      logger.error("No departments data found");
+      logger.error("No se han encontrado departamentos");
       return [];
     }
 
@@ -215,7 +157,7 @@ export const getDepartments = async (): Promise<string[]> => {
 
     return departmentsInSdp;
   } catch (error) {
-    logger.error(`Error fetching departments: ${error}`);
+    logger.error(`Error al obtener departamentos: ${error}`);
     return [];
   }
 };
