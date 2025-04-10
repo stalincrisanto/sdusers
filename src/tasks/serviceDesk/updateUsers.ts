@@ -16,9 +16,11 @@ export const updateUsers = async (
   usersEpmaps: UserEpmapWithEmail[]
 ) => {
   try {
-    // Constantes de configuración interna
-    const BATCH_SIZE = 20; // Tamaño del lote
-    const DELAY_BETWEEN_BATCHES = 1000; // 1 segundo de retardo entre lotes
+    // Constantes de configuración optimizadas
+    const BATCH_SIZE = 15; // Reducido para mayor estabilidad
+    const DELAY_BETWEEN_BATCHES = 2000; // Aumentado a 2 segundos
+    const MAX_RETRIES = 3; // Máximo de reintentos por usuario
+    const INITIAL_RETRY_DELAY = 1000; // 1 segundo inicial entre reintentos
 
     // Actualización de datos de usuarios
     const updatedUsersSdp: UserSdpComplete[] = usersSdp.map((userSdp) => {
@@ -42,31 +44,19 @@ export const updateUsers = async (
       return userSdp;
     });
 
-    logger.info(
-      `USUARIOS FORMATEADOS PARA MODIFICAR ${JSON.stringify(updatedUsersSdp)}`
-    );
+    logger.info(`Total de usuarios a actualizar: ${updatedUsersSdp.length}`);
 
-    // Función para procesar un lote de usuarios
-    const processBatch = async (batch: UserSdpComplete[]) => {
-      const batchPromises = batch.map(({ id, email_id, ...rest }) => {
-        if (!email_id) return Promise.resolve();
+    // Función mejorada con reintentos para procesar un usuario individual
+    const updateSingleUser = async (user: UserSdpComplete) => {
+      const { id, email_id, ...rest } = user;
+      if (!email_id) return { success: false, id, error: "Email no disponible" };
 
-        logger.info(
-          `DATOS MODIFICADOS EN EL PROCESO BATCH ${{
-            input_data: JSON.stringify({
-              user: {
-                ...(rest.jobtitle && { jobtitle: rest.jobtitle }),
-                ...(rest.department && { department: rest.department }),
-              },
-              IDUSUARIO: id,
-              EMAIL: email_id,
-              RESTINFO: rest
-            }),
-          }}`
-        );
+      let attempt = 0;
+      let lastError: any = null;
 
-        return axios
-          .put(
+      while (attempt < MAX_RETRIES) {
+        try {
+          const response = await axios.put(
             `${SERVICE_DESK_API_URL}/v3/users/${id}`,
             new URLSearchParams({
               input_data: JSON.stringify({
@@ -82,15 +72,34 @@ export const updateUsers = async (
                 "Content-Type": "application/x-www-form-urlencoded",
               },
               httpsAgent,
+              timeout: 10000, // Timeout de 10 segundos
             }
-          )
-          .catch((error) => {
-            logger.error(`Error al actualizar usuario ${id}: ${error}`);
-            return null;
-          });
-      });
+          );
 
-      return Promise.all(batchPromises);
+          return { success: true, id, response: response.data };
+        } catch (error: any) {
+          lastError = error;
+          attempt++;
+          
+          if (attempt < MAX_RETRIES) {
+            const delay = INITIAL_RETRY_DELAY * Math.pow(2, attempt - 1); // Backoff exponencial
+            logger.warn(`Reintento ${attempt} para usuario ${id} en ${delay}ms`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+          }
+        }
+      }
+
+      logger.error(`Error persistente al actualizar usuario ${id} después de ${MAX_RETRIES} intentos: ${lastError?.message}`);
+      return { success: false, id, error: lastError };
+    };
+
+    // Función para procesar un lote de usuarios
+    const processBatch = async (batch: UserSdpComplete[]) => {
+      const results = [];
+      for (const user of batch) {
+        results.push(await updateSingleUser(user));
+      }
+      return results;
     };
 
     // Procesamiento por lotes
@@ -98,38 +107,71 @@ export const updateUsers = async (
     let processed = 0;
     let successCount = 0;
     let errorCount = 0;
+    const errorDetails: {id: string, error: any}[] = [];
 
     while (processed < totalUsers) {
       const batch = updatedUsersSdp.slice(processed, processed + BATCH_SIZE);
       logger.info(
-        `Procesando lote ${processed / BATCH_SIZE + 1} de ${Math.ceil(
+        `Procesando lote ${Math.ceil(processed / BATCH_SIZE) + 1} de ${Math.ceil(
           totalUsers / BATCH_SIZE
         )}`
       );
 
       const batchResults = await processBatch(batch);
-      successCount += batchResults.filter((r) => r !== null).length;
-      errorCount += batchResults.filter((r) => r === null).length;
-      processed += BATCH_SIZE;
+      
+      // Contabilizar resultados
+      batchResults.forEach(result => {
+        if (result.success) {
+          successCount++;
+        } else {
+          errorCount++;
+          if (result.id && result.error) {
+            errorDetails.push({id: result.id, error: result.error});
+          }
+        }
+      });
+
+      processed += batch.length;
 
       // Esperar antes del siguiente lote si no es el último
       if (processed < totalUsers) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, DELAY_BETWEEN_BATCHES)
-        );
+        await new Promise((resolve) => setTimeout(resolve, DELAY_BETWEEN_BATCHES));
       }
     }
 
-    // Mensaje final con resultados
+    // Reporte final detallado
     logger.info(
-      "==================== ACTUALIZACIÓN DE USUARIOS COMPLETADA ===================="
+      "==================== RESUMEN DE ACTUALIZACIÓN ===================="
     );
     logger.info(`Total procesados: ${totalUsers}`);
-    logger.info(`Actualizaciones exitosas: ${successCount}`);
-    logger.info(`Errores: ${errorCount}`);
+    logger.info(`Actualizaciones exitosas: ${successCount} (${((successCount / totalUsers) * 100).toFixed(1)}%)`);
+    logger.info(`Errores: ${errorCount} (${((errorCount / totalUsers) * 100).toFixed(1)}%)`);
+    
+    if (errorDetails.length > 0) {
+      logger.info("==================== DETALLES DE ERRORES ====================");
+      logger.info(`Primeros 10 errores de ${errorDetails.length}:`);
+      errorDetails.slice(0, 10).forEach((err, index) => {
+        logger.info(`${index + 1}. Usuario ID ${err.id}: ${err.error?.message || err.error}`);
+      });
+      
+      // Opcional: Guardar todos los errores en un archivo si son muchos
+      if (errorDetails.length > 10) {
+        logger.info(`... y ${errorDetails.length - 10} errores adicionales`);
+      }
+    }
+
+    // Advertencia si hay muchos errores
+    if (errorCount > 0 && errorCount / totalUsers > 0.1) {
+      logger.warn("ADVERTENCIA: Más del 10% de las actualizaciones fallaron");
+    }
+
+    if (errorCount === 0) {
+      logger.info("TODAS las actualizaciones se completaron exitosamente");
+    }
+
   } catch (error) {
-    logger.error("ERROR GENERAL EN EL PROCESO DE ACTUALIZACIÓN DE USUARIOS");
+    logger.error("ERROR CRÍTICO EN EL PROCESO DE ACTUALIZACIÓN DE USUARIOS");
     logger.error(`Detalles del error: ${error}`);
-    throw error; // Relanzamos el error para manejo externo
+    throw error;
   }
 };

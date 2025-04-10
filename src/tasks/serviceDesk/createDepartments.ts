@@ -24,10 +24,13 @@ export const createDepartments = async (
             getInfoUserEmpams(email_id!),
             10000
           ); // 5s
+          // if(!userInfo){
+          //   logger.error(`Usuario con email: ${email_id} no encontrado`);
+          // }
           // Agregar el email al objeto devuelto por getInfoUserEmpams
           return userInfo ? { ...userInfo, EMAIL: email_id } : null;
         } catch (err) {
-          // logger.error(`Timeout o error con usuario ${email_id}: ${err}`);
+          // logger.error(`Usuario con ${email_id} no encontrado: ${err}`);
           return null;
         }
       });
