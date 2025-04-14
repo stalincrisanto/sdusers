@@ -19,18 +19,16 @@ export const createDepartments = async (
 
       const batchPromises = batch.map(async ({ email_id }) => {
         try {
-          // return await withTimeout(getInfoUserEmpams(email_id!), 5000); // 5s
           const userInfo = await withTimeout(
             getInfoUserEmpams(email_id!),
             10000
           ); // 5s
-          // if(!userInfo){
-          //   logger.error(`Usuario con email: ${email_id} no encontrado`);
-          // }
+          if(!userInfo){
+            logger.error(`Usuario con email: ${email_id} no encontrado`);
+          }
           // Agregar el email al objeto devuelto por getInfoUserEmpams
           return userInfo ? { ...userInfo, EMAIL: email_id } : null;
         } catch (err) {
-          // logger.error(`Usuario con ${email_id} no encontrado: ${err}`);
           return null;
         }
       });

@@ -15,9 +15,8 @@ export const main = async () => {
     const usersSdp = await getUsers();
     const usersEpmaps = await createDepartments(departmentsSdp, usersSdp);
     logger.info(`Departamentos actualizados correctamente`);
-    logger.info(`USUARIOS QUE TRAIGO DESDE EPMAPS ========== ${usersEpmaps?.length}`);
     await updateUsers(usersSdp, usersEpmaps!);
-    logger.info("Proceso finalizado CORRECTAMENTE");
+    logger.info("Usuarios actualizados correctamente");
   } catch (error) {
     logger.info(`Ha ocurrido un error al ejecutar el proceso: ${error}`);
   }
