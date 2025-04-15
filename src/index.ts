@@ -1,6 +1,3 @@
-import { departmentsProcess } from "./departmentsProcess";
-import { getUsersFromServiceDesk } from "./serviceDeskClient";
-import { getInfoUserEmpams } from "./tasks/epmaps/epmapsTasks";
 import { createDepartments } from "./tasks/serviceDesk/createDepartments";
 import {
   getDepartments,
@@ -12,6 +9,7 @@ import { logger } from "./utils/logger";
 export const main = async () => {
   try {
     const departmentsSdp = await getDepartments();
+    logger.info(`CANTIDAD DE DEPARTAMENTOS: ${departmentsSdp.length}`);
     const usersSdp = await getUsers();
     const usersEpmaps = await createDepartments(departmentsSdp, usersSdp);
     logger.info(`Departamentos actualizados correctamente`);

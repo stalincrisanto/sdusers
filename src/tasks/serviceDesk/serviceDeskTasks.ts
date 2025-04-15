@@ -69,56 +69,6 @@ export const getUsers = async () => {
   }
 };
 
-// export const updateUsers = async (
-//   usersSdp: UserSdp[],
-//   usersEpmaps: UserEpmap[]
-// ) => {
-//   try {
-
-//     const promises = usersSdp.map(({ id, email_id }) => {
-//       if (email_id) {
-//         return getInfoUserEmpams(email_id).then(async (userFromEpmap) => {
-//           const responseUpdate = await axios.put(
-//             `${SERVICE_DESK_API_URL}/v3/users/${id}`,
-//             new URLSearchParams({
-//               input_data: JSON.stringify({
-//                 user: {
-//                   ...(userFromEpmap?.ZTPLANS && {
-//                     jobtitle: userFromEpmap.ZTPLANS,
-//                   }),
-//                   ...(userFromEpmap?.ZTORGEH && {
-//                     department: {
-//                       name: userFromEpmap.ZTORGEH,
-//                     },
-//                   }),
-//                 },
-//               }),
-//             }),
-//             {
-//               headers: {
-//                 authtoken: API_KEY_SERVICEDESK,
-//                 "Content-Type": "application/x-www-form-urlencoded",
-//               },
-//               httpsAgent,
-//             }
-//           );
-//           return responseUpdate;
-//         });
-//       }
-//       return Promise.resolve();
-//     });
-
-//     if (promises.length > 0) {
-//       await Promise.all(promises);
-//       logger.info("====================Usuarios modificados=================");
-//     }
-//   } catch (error) {
-//     logger.error(`ERROR AL MODIFICAR EL USUARIO`);
-//     throw new Error(`${error}`);
-//   }
-// };
-
-
 export const getDepartments = async (): Promise<string[]> => {
   try {
     const response = await axios.post(
@@ -161,39 +111,6 @@ export const getDepartments = async (): Promise<string[]> => {
     return [];
   }
 };
-
-// export const createDepartments = async (
-//   departmentsSdp: string[],
-//   usersSdp: UserSdp[]
-// ): Promise<void> => {
-//   try {
-//     const userEpmapsPromises = usersSdp.map(({ email_id }) =>
-//       getInfoUserEmpams(email_id!)
-//     );
-//     const users = await Promise.all(userEpmapsPromises);
-
-//     const departmentsEpmaps = Array.from(
-//       new Set(users.map((userEpmap) => [userEpmap?.ZTORGEH]).flat())
-//     ).filter((department) => department !== undefined);
-
-//     const departmentsToCreate = departmentsEpmaps.filter(
-//       (department) => !departmentsSdp.includes(department!)
-//     );
-
-//     if (departmentsToCreate.length > 0) {
-//       const INPUT_DATA = generateCreateDepartmentsXml(
-//         departmentsToCreate as string[]
-//       );
-//       const dataForAddDepartments = new URLSearchParams({
-//         OPERATION_NAME: "add",
-//         INPUT_DATA,
-//       });
-//       await addDepartmentToSdp(dataForAddDepartments);
-//     }
-//   } catch (error) {
-//     logger.error(`Se ha producido un error ${error}`);
-//   }
-// };
 
 export const addDepartmentToSdp = async (
   dataForAddDepartments: URLSearchParams
