@@ -5,11 +5,9 @@ import {
   UserSdp,
   UserSdpComplete,
 } from "../../utils/types";
-import { configProd } from "../../config/config";
 import { logger } from "../../utils/logger";
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-const { SERVICE_DESK_API_URL, API_KEY_SERVICEDESK } = configProd;
 
 export const updateUsers = async (
   usersSdp: UserSdp[],
@@ -57,7 +55,7 @@ export const updateUsers = async (
       while (attempt < MAX_RETRIES) {
         try {
           const response = await axios.put(
-            `${SERVICE_DESK_API_URL}/v3/users/${id}`,
+            `${process.env.SERVICE_DESK_API_URL}/v3/users/${id}`,
             new URLSearchParams({
               input_data: JSON.stringify({
                 user: {
@@ -68,7 +66,7 @@ export const updateUsers = async (
             }),
             {
               headers: {
-                authtoken: API_KEY_SERVICEDESK,
+                authtoken: process.env.API_KEY_SERVICEDESK,
                 "Content-Type": "application/x-www-form-urlencoded",
               },
               httpsAgent,

@@ -1,12 +1,9 @@
 import https from "https";
 import axios from "axios";
-import { configDev, configProd } from "../../config/config";
 import { dataForGetDepartments } from "./consts";
-import { ResponseSDP, UserEpmap, UserEpmapWithEmail, UserSdp } from "../../utils/types";
-import { getInfoUserEmpams } from "../epmaps/epmapsTasks";
-import { generateCreateDepartmentsXml } from "./generateXML";
+import { ResponseSDP, UserSdp } from "../../utils/types";
 import { logger } from "../../utils/logger";
-const { SERVICE_DESK_API_URL, API_KEY_SERVICEDESK } = configProd;
+
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
 export const getUsers = async () => {
@@ -31,9 +28,9 @@ export const getUsers = async () => {
       }`;
 
       const encodedInputData = encodeURIComponent(inputData);
-      const url = `${SERVICE_DESK_API_URL}/v3/users?input_data=${encodedInputData}`;
+      const url = `${process.env.SERVICE_DESK_API_URL}/v3/users?input_data=${encodedInputData}`;
       const response = await axios.get(url, {
-        headers: { authtoken: API_KEY_SERVICEDESK },
+        headers: { authtoken: process.env.API_KEY_SERVICEDESK },
         httpsAgent,
       });
 
@@ -72,11 +69,11 @@ export const getUsers = async () => {
 export const getDepartments = async (): Promise<string[]> => {
   try {
     const response = await axios.post(
-      `${SERVICE_DESK_API_URL}/cmdb/ci`,
+      `${process.env.SERVICE_DESK_API_URL}/cmdb/ci`,
       dataForGetDepartments,
       {
         headers: {
-          authtoken: API_KEY_SERVICEDESK,
+          authtoken: process.env.API_KEY_SERVICEDESK,
           "Content-Type": "application/x-www-form-urlencoded",
         },
         httpsAgent,
@@ -116,9 +113,9 @@ export const addDepartmentToSdp = async (
   dataForAddDepartments: URLSearchParams
 ) => {
   try {
-    await axios.post(`${SERVICE_DESK_API_URL}/cmdb/ci`, dataForAddDepartments, {
+    await axios.post(`${process.env.SERVICE_DESK_API_URL}/cmdb/ci`, dataForAddDepartments, {
       headers: {
-        authtoken: API_KEY_SERVICEDESK,
+        authtoken: process.env.API_KEY_SERVICEDESK,
         "Content-Type": "application/x-www-form-urlencoded",
       },
       httpsAgent,

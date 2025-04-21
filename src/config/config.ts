@@ -1,12 +1,40 @@
-export const configDev = {
-  SERVICE_DESK_API_URL: "https://localhost:8080/api",
-  EPMAPS_API_URL: "http://localhost:3001/soap?wsdl",
-  API_KEY_SERVICEDESK: "A2C6B0D6-CE8F-4D22-A61D-7A0C81954266",
+import fs from "fs";
+import path from "path";
+import { logger } from "../utils/logger";
+
+export const loadEnv = (environmentName: string) => {
+  const envPath = path.join(
+    process.cwd(),
+    "src",
+    "config",
+    `.env.${environmentName}`
+  );
+  if (!fs.existsSync(envPath)) {
+    logger.error(
+      `Archivo .env.${environmentName} no encontrado, error al leer las variables de entorno`
+    );
+    return;
+  }
+
+  const envContent = fs.readFileSync(envPath, "utf-8");
+  // const loadedVars: Record<string, string> = {};
+
+  envContent.split("\n").forEach((line) => {
+    const trimmedLine = line.trim();
+    if (!trimmedLine || trimmedLine.startsWith("#")) return;
+
+    const separatorIndex = trimmedLine.indexOf("=");
+    if (separatorIndex === -1) return;
+
+    const key = trimmedLine.slice(0, separatorIndex).trim();
+    let value = trimmedLine.slice(separatorIndex + 1).trim();
+
+    process.env[key] = value;
+    // loadedVars[key] = value;
+  });
+
+  // logger.info("Variables de entorno cargadas:");
+  // Object.entries(loadedVars).forEach(([key, value]) => {
+  //   logger.info(`${key} = ${value}`);
+  // });
 };
-
-export const configProd = {
-  SERVICE_DESK_API_URL: "https://aquasoporte.aguaquito.gob.ec/api",
-  EPMAPS_API_URL: "http://localhost:3001/soap?wsdl",
-  API_KEY_SERVICEDESK: "B632A057-CD5F-4F07-ACDE-22433C9A4063",
-}
-
