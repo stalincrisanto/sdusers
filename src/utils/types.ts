@@ -110,6 +110,7 @@ export interface UserEpmapWithEmail {
   ZNAME_JF: string;
   ZTPLANS_JF: string;
   EMAIL: string;
+  ZORGEH: string;
 }
 
 export interface UserSdp {

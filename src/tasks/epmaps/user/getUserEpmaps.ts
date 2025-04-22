@@ -1,6 +1,6 @@
 import { createClientAsync, BasicAuthSecurity } from "soap";
-import { UserEpmap } from "../../utils/types";
-import { logger } from "../../utils/logger";
+import { UserEpmap } from "../../../utils/types";
+import { logger } from "../../../utils/logger";
 
 // const SOAP_URL =
   // "http://srvpiqas.emaapq.local:50000/dir/wsdl?p=ic/35398c31057f3401bc39d197fff37622";
@@ -9,7 +9,7 @@ import { logger } from "../../utils/logger";
 // const SOAP_USER = "PIQSERVICE";
 // const SOAP_PASSWORD = "PIQEPM@P$2016";
 
-export const getInfoUserEmpams = async (email: string) => {
+export const getUserEpmaps = async (email: string) => {
   try {
     const client = await createClientAsync(process.env.EPMAPS_SOAP_URL!, {
       endpoint: process.env.EPMAPS_ENDPOINT,

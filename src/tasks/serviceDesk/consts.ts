@@ -10,3 +10,18 @@ export const dataForAddDepartments = (inputData: string) => {
     INPUT_DATA: inputData,
   });
 };
+
+export const dataForGetUsers = (startIndex: number, batchSize: number) => {
+  const inputData = `{
+    list_info: {
+      start_index: ${startIndex},
+      row_count: ${batchSize},
+      get_total_count: ${startIndex === 1},
+      search_fields: {
+        email_id: "*" 
+      } 
+    },
+    fields_required: ["name", "email_id", "department", "jobtitle"]
+  }`;
+  return inputData;
+};

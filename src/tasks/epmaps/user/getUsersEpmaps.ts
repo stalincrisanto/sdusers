@@ -1,13 +1,10 @@
-import { logger } from "../../utils/logger";
-import { UserEpmap, UserEpmapWithEmail, UserSdp } from "../../utils/types";
-import { getInfoUserEmpams } from "../epmaps/epmapsTasks";
-import { generateCreateDepartmentsXml } from "./generateXML";
-import { addDepartmentToSdp } from "./serviceDeskTasks";
+import { logger } from "../../../utils/logger";
+import { UserEpmap, UserEpmapWithEmail, UserSdp } from "../../../utils/types";
+import { getUserEpmaps } from "./getUserEpmaps";
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-export const createDepartments = async (
-  departmentsSdp: string[],
+export const getUsersEpmaps = async (
   usersSdp: UserSdp[]
 ): Promise<UserEpmapWithEmail[] | null> => {
   const BATCH_SIZE = 10; // Puedes ajustar esto según rendimiento/pruebas
@@ -19,11 +16,8 @@ export const createDepartments = async (
 
       const batchPromises = batch.map(async ({ email_id }) => {
         try {
-          const userInfo = await withTimeout(
-            getInfoUserEmpams(email_id!),
-            10000
-          ); // 5s
-          if(!userInfo){
+          const userInfo = await withTimeout(getUserEpmaps(email_id!), 10000); // 5s
+          if (!userInfo) {
             logger.error(`Usuario con email: ${email_id} no encontrado`);
           }
           // Agregar el email al objeto devuelto por getInfoUserEmpams
@@ -36,33 +30,12 @@ export const createDepartments = async (
       const batchResults = await Promise.all(batchPromises);
       users.push(...batchResults);
 
-      logger.info(
-        `Se han procesado ${batchResults.length} usuarios`
-      );
+      logger.info(`Se han procesado ${batchResults.length} usuarios`);
 
       // Optional: agregar pequeño delay para dar respiro al servidor SOAP
       await delay(2000); // 200ms entre lotes
     }
 
-    const departmentsEpmaps = Array.from(
-      new Set(users.map((userEpmap) => [userEpmap?.ZTORGEH]).flat())
-    ).filter((department) => department !== undefined);
-
-    const departmentsToCreate = departmentsEpmaps.filter(
-      (department) => !departmentsSdp.includes(department!)
-    );
-
-    if (departmentsToCreate.length > 0) {
-      const INPUT_DATA = generateCreateDepartmentsXml(
-        departmentsToCreate as string[]
-      );
-      const dataForAddDepartments = new URLSearchParams({
-        OPERATION_NAME: "add",
-        INPUT_DATA,
-      });
-      await addDepartmentToSdp(dataForAddDepartments);
-    }
-    
     return users.filter((user) => user !== null) as UserEpmapWithEmail[];
   } catch (error) {
     logger.error(`Se ha producido un error ${error}`);

@@ -18,6 +18,6 @@ export const logger = createLogger({
   transports: [
     new transports.Console(),
     // new transports.File({ filename: `C:\\AN-test\\process-result-${currentDate}.log` }),
-    new transports.File({ filename: `D:\\${fileName}` }),
+    new transports.File({ filename: `C:\\AN-test\\${fileName}` }),
   ],
 });
