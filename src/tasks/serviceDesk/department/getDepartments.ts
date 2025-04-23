@@ -24,7 +24,11 @@ export const getDepartments = async (): Promise<string[]> => {
     // Verificar si la respuesta es exitosa (status code 200)
     const statusCode = data.API.response.operation.result.statuscode;
     const message = data.API.response.operation.result.message;
-    if (statusCode !== 200) {
+    if (statusCode === 3000) {
+      logger.info(`No se han encontrado departamentos registrados`);
+      return [];
+    }
+    if (statusCode !== 200 && statusCode !== 3000) {
       logger.error(
         `Error al recibir departamentos: ${statusCode} - ${message}`
       );

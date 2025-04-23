@@ -1,3 +1,4 @@
+import { getInfoUserEmpams } from "../../../soapFake";
 import { logger } from "../../../utils/logger";
 import { UserEpmap, UserEpmapWithEmail, UserSdp } from "../../../utils/types";
 import { getUserEpmaps } from "./getUserEpmaps";
@@ -16,7 +17,8 @@ export const getUsersEpmaps = async (
 
       const batchPromises = batch.map(async ({ email_id }) => {
         try {
-          const userInfo = await withTimeout(getUserEpmaps(email_id!), 10000); // 5s
+          //ESTA FUNCION CAMBIARLE OJO getUserEpmaps
+          const userInfo = await withTimeout(getInfoUserEmpams(email_id!), 10000); // 5s
           if (!userInfo) {
             logger.error(`Usuario con email: ${email_id} no encontrado`);
           }

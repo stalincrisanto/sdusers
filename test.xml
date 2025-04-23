@@ -1,24 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<API version="1.0" locale="en">
-    <citype>
-        <name>Department</name>
-        <criterias>
-            <criteria>
-                <parameter>
-                    <name compOperator="IS">CI Type</name>
-                    <value>Department</value>
-                </parameter>
-            </criteria>
-        </criterias>
-        <returnFields>
-            <name>CI Name</name>
-            <name>CI Type</name>
-            <name>Description</name>
-        </returnFields>
-        <!-- If the total number pages is 100, we can give the navigation from 50 to 50 -->
-        <range>
-            <startindex>1</startindex>
-            <limit>50</limit>
-        </range>
-    </citype>
-</API>
+<record>
+    <parameter>
+        <name>CI Name</name>
+        <value>${department}</value>
+    </parameter>
+    <parameter>
+        <name>CI Type</name>
+        <value>Department</value>
+    </parameter>
+    <parameter>
+        <name>Site</name>
+        <value>(empty)</value>
+    </parameter>
+    <parameter>
+        <name>Business Impact</name>
+        <value>(empty)</value>
+    </parameter>
+    <parameter>
+        <name>Description</name>
+        <value>(empty)</value>
+    </parameter>
+</record>
