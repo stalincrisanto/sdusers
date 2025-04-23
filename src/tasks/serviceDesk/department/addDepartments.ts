@@ -1,7 +1,7 @@
 import axios from "axios";
 import https from "https";
 import { logger } from "../../../utils/logger";
-import { generateCreateDepartmentsXml } from "../generateXML";
+import { generateCreateDepartmentsXml } from "../../../utils/generateXML";
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 

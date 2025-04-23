@@ -3,6 +3,7 @@ import axios from "axios";
 import { logger } from "../../../utils/logger";
 import { UserEpmapWithEmail } from "../../../utils/types";
 import { createDepartment } from "./addDepartments";
+import { updateDepartment } from "./updateDepartment";
 
 export const processDepartments = async (
   departmentsSdp: string[],
@@ -13,7 +14,7 @@ export const processDepartments = async (
     const uniqueSapDepartments = Array.from(
       new Map(
         usersEpmaps
-          .filter(({ ZTORGEH }) => ZTORGEH !== undefined) // Ignoramos valores vacíos
+          .filter(({ ZTORGEH }) => ZTORGEH !== undefined) // Filtro por usuarios que no estén con departamentos
           .map(({ ZTORGEH, ZORGEH }) => [
             ZTORGEH, // Clave única: nombre del departamento
             {
@@ -30,7 +31,7 @@ export const processDepartments = async (
       nameToCreate: string;
       codeToCreate: string;
     }[] = [];
-    const departmentsToUpdate: { oldName: string; newName: string }[] = [];
+    const departmentsToUpdate: { nameToUpdate: string; codeToUpdate: string }[] = [];
 
     uniqueSapDepartments.forEach((sapDepartment) => {
       const existsInSdp = departmentsSdp.includes(sapDepartment.department);
@@ -42,38 +43,27 @@ export const processDepartments = async (
           codeToCreate: sapDepartment.departmentCode,
         });
       }
+      departmentsToUpdate.push({
+        nameToUpdate: sapDepartment.department,
+        codeToUpdate: sapDepartment.departmentCode
+      })
     });
 
     if (departmentsToCreate.length > 0) {
-      createDepartment(departmentsToCreate)
-      logger.info(`Se han agregado ${departmentsToCreate.length} departamentos`);
+      createDepartment(departmentsToCreate);
+      logger.info(
+        `Se han agregado ${departmentsToCreate.length} departamentos`
+      );
     }
 
+    if(departmentsToUpdate.length > 0){
+      //PROCESO PARA HACER EL UPDATE
+      updateDepartment(departmentsToUpdate);
+      logger.info(`Se han actualizado ${departmentsToUpdate.length} departamentos`);
+    }
   } catch (error) {
     logger.error(`Se ha producido un error ${error}`);
     return;
   }
 };
 
-// export const addDepartmentToSdp = async (
-//   dataForAddDepartments: URLSearchParams
-// ) => {
-//   try {
-//     await axios.post(
-//       `${process.env.SERVICE_DESK_API_URL}/cmdb/ci`,
-//       dataForAddDepartments,
-//       {
-//         headers: {
-//           authtoken: process.env.API_KEY_SERVICEDESK,
-//           "Content-Type": "application/x-www-form-urlencoded",
-//         },
-//         httpsAgent,
-//       }
-//     );
-//     logger.info("Se han actualizado los departamentos correctamente");
-//   } catch (error) {
-//     logger.error(
-//       `Se ha producido un error al guardar los departamentos: ${error}`
-//     );
-//   }
-// };

@@ -13,6 +13,7 @@ loadEnv("dev");
 
 export const main = async () => {
   try {
+    // PROCESO PARA CREAR/ACTUALIZAR DEPARTAMENTOS
     const departmentsSdp = await getDepartments();
     const usersSdp = await getUsers();
     const usersEpmaps = await getUsersEpmaps(usersSdp);
