@@ -73,8 +73,6 @@ import { logger } from "../../../utils/logger";
 import { generateUpdateDepartmentsXml } from "../../../utils/generateXML";
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-
-// Espera un tiempo en milisegundos
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const updateDepartment = async (
@@ -95,35 +93,33 @@ export const updateDepartment = async (
     nameToUpdate: string;
     codeToUpdate: string;
     error: any;
+    requestXml: string;
+    attempt: number;
   }[] = [];
 
-  logger.info(
-    "====================================================================="
-  );
-  logger.info(
-    "================ INICIO ACTUALIZACIÓN DE DEPARTAMENTOS ================"
-  );
-  logger.info(
-    "====================================================================="
-  );
+  logger.info("=====================================================================");
+  logger.info("================ INICIO ACTUALIZACIÓN DE DEPARTAMENTOS ================");
+  logger.info("=====================================================================");
 
   while (processed < departmentsToUpdate.length) {
     const batch = departmentsToUpdate.slice(processed, processed + BATCH_SIZE);
     logger.info(
-      `Procesando lote ${Math.ceil(processed / BATCH_SIZE) + 1} de ${Math.ceil(
+      `📦 Procesando lote ${Math.ceil(processed / BATCH_SIZE) + 1} de ${Math.ceil(
         departmentsToUpdate.length / BATCH_SIZE
       )}`
     );
 
     for (const { nameToUpdate, codeToUpdate } of batch) {
-      const INPUT_DATA = generateUpdateDepartmentsXml(
-        nameToUpdate,
-        codeToUpdate
-      );
+      logger.info(`➡️ Procesando: ${nameToUpdate} (${codeToUpdate})`);
+
+      const INPUT_DATA = generateUpdateDepartmentsXml(nameToUpdate, codeToUpdate);
       const dataForUpdateDepartments = new URLSearchParams({
         OPERATION_NAME: "update",
         INPUT_DATA,
       });
+
+      logger.debug(`📄 XML generado para ${nameToUpdate}:`);
+      logger.debug(INPUT_DATA);
 
       let attempt = 0;
       let success = false;
@@ -131,6 +127,7 @@ export const updateDepartment = async (
 
       while (attempt < MAX_RETRIES && !success) {
         try {
+          logger.debug(`🔁 Intento ${attempt + 1} - Enviando solicitud POST`);
           await axios.post(
             `${process.env.SERVICE_DESK_API_URL}/cmdb/ci`,
             dataForUpdateDepartments,
@@ -143,57 +140,64 @@ export const updateDepartment = async (
               timeout: 10000,
             }
           );
+          logger.info(`✅ Actualización exitosa: ${nameToUpdate}`);
           success = true;
           successCount++;
         } catch (error: any) {
           lastError = error;
           attempt++;
 
+          const responseData =
+            error?.response?.data || error?.message || "Sin mensaje";
+
+          logger.warn(
+            `⚠️ Error al intentar actualizar "${nameToUpdate}" (intento ${attempt}): ${responseData}`
+          );
+
           if (attempt < MAX_RETRIES) {
             const delay = INITIAL_RETRY_DELAY * Math.pow(2, attempt - 1);
-            logger.warn(
-              `Reintento ${attempt} para depto "${nameToUpdate}" (${codeToUpdate}) en ${delay}ms`
-            );
+            logger.warn(`⏱️ Esperando ${delay} ms antes de reintentar...`);
             await sleep(delay);
           }
         }
       }
 
       if (!success) {
+        logger.error(`❌ Fallo persistente al actualizar: ${nameToUpdate} (${codeToUpdate})`);
         errorCount++;
-        errorDetails.push({ nameToUpdate, codeToUpdate, error: lastError });
-        logger.error(`❌ Fallo persistente: ${nameToUpdate} (${codeToUpdate})`);
+        errorDetails.push({
+          nameToUpdate,
+          codeToUpdate,
+          error: lastError,
+          requestXml: INPUT_DATA,
+          attempt,
+        });
       }
     }
 
     processed += batch.length;
 
     if (processed < departmentsToUpdate.length) {
+      logger.info(`⏳ Esperando ${DELAY_BETWEEN_BATCHES} ms antes del siguiente lote...`);
       await sleep(DELAY_BETWEEN_BATCHES);
     }
   }
 
-  logger.info(
-    "==================== RESUMEN DE ACTUALIZACIÓN ===================="
-  );
-  logger.info(`Total procesados: ${departmentsToUpdate.length}`);
-  logger.info(`Departamentos actualizados: ✅ ${successCount}`);
-  logger.info(`Errores: ❌ ${errorCount}`);
+  logger.info("==================== RESUMEN DE ACTUALIZACIÓN ====================");
+  logger.info(`📋 Total procesados: ${departmentsToUpdate.length}`);
+  logger.info(`✅ Éxitos: ${successCount}`);
+  logger.info(`❌ Errores: ${errorCount}`);
 
   if (errorDetails.length > 0) {
-    logger.info(
-      "==================== DETALLES DE ERRORES ===================="
-    );
-    errorDetails.slice(0, 10).forEach((err, i) => {
-      logger.info(
-        `${i + 1}. ${err.nameToUpdate} (${err.codeToUpdate}): ${
-          err.error?.message || err.error
-        }`
+    logger.info("==================== DETALLES DE ERRORES ====================");
+    errorDetails.forEach((err, i) => {
+      logger.error(
+        `${i + 1}. ${err.nameToUpdate} (${err.codeToUpdate})\n` +
+        `➡️ Intentos: ${err.attempt}\n` +
+        `🛑 Error: ${err.error?.response?.data || err.error?.message || err.error}\n` +
+        `📄 XML enviado:\n${err.requestXml}\n`
       );
     });
-    if (errorDetails.length > 10) {
-      logger.info(`... y ${errorDetails.length - 10} errores adicionales`);
-    }
   }
 
   if (errorCount === 0) {

@@ -31,22 +31,34 @@ export const processDepartments = async (
       nameToCreate: string;
       codeToCreate: string;
     }[] = [];
-    const departmentsToUpdate: { nameToUpdate: string; codeToUpdate: string }[] = [];
+    const departmentsToUpdate: {
+      nameToUpdate: string;
+      codeToUpdate: string;
+    }[] = [];
 
     uniqueSapDepartments.forEach((sapDepartment) => {
       const existsInSdp = departmentsSdp.includes(sapDepartment.department);
 
       if (!existsInSdp) {
         // Crear nuevo departamento (nombre + código)
+        logger.info(
+          `INGRESO VALIDACION PARA CREAR DEPARTAMENTO ${sapDepartment.department}`
+        );
         departmentsToCreate.push({
           nameToCreate: sapDepartment.department,
           codeToCreate: sapDepartment.departmentCode,
         });
       }
+      logger.info(
+        `MODIFICANDO DEPARTAMENTO ${JSON.stringify({
+          nombre: sapDepartment.department,
+          codigo: sapDepartment.departmentCode,
+        })}`
+      );
       departmentsToUpdate.push({
         nameToUpdate: sapDepartment.department,
-        codeToUpdate: sapDepartment.departmentCode
-      })
+        codeToUpdate: sapDepartment.departmentCode,
+      });
     });
 
     if (departmentsToCreate.length > 0) {
@@ -56,7 +68,7 @@ export const processDepartments = async (
       );
     }
 
-    if(departmentsToUpdate.length > 0){
+    if (departmentsToUpdate.length > 0) {
       //PROCESO PARA HACER EL UPDATE
       await updateDepartment(departmentsToUpdate);
       logger.info(`Se han actualizado los departamentos correctament`);
@@ -66,4 +78,3 @@ export const processDepartments = async (
     return;
   }
 };
-
