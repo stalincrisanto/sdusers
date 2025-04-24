@@ -4,10 +4,12 @@ import {
   UserEpmapWithEmail,
   UserSdp,
   UserSdpComplete,
-} from "../../utils/types";
-import { logger } from "../../utils/logger";
+} from "../../../utils/types";
+import { logger } from "../../../utils/logger";
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+const SERVICE_DESK_API_URL = "https://aquasoporte.aguaquito.gob.ec/api";
+const API_KEY_SERVICEDESK = "072D8F37-AC13-4E0E-BB76-547FCC57435A";
 
 export const updateUsers = async (
   usersSdp: UserSdp[],
@@ -36,6 +38,11 @@ export const updateUsers = async (
                 name: userFromEpmap.ZTORGEH,
               },
             }),
+            ...(userFromEpmap?.N_EMPLEADO && {
+              user_udf_fields: {
+                udf_sline_301: userFromEpmap.N_EMPLEADO,
+              },
+            }),
           };
         }
       }
@@ -47,7 +54,8 @@ export const updateUsers = async (
     // Función mejorada con reintentos para procesar un usuario individual
     const updateSingleUser = async (user: UserSdpComplete) => {
       const { id, email_id, ...rest } = user;
-      if (!email_id) return { success: false, id, error: "Email no disponible" };
+      if (!email_id)
+        return { success: false, id, error: "Email no disponible" };
 
       let attempt = 0;
       let lastError: any = null;
@@ -55,18 +63,21 @@ export const updateUsers = async (
       while (attempt < MAX_RETRIES) {
         try {
           const response = await axios.put(
-            `${process.env.SERVICE_DESK_API_URL}/v3/users/${id}`,
+            `${SERVICE_DESK_API_URL}/v3/users/${id}`,
             new URLSearchParams({
               input_data: JSON.stringify({
                 user: {
                   ...(rest.jobtitle && { jobtitle: rest.jobtitle }),
                   ...(rest.department && { department: rest.department }),
+                  ...(rest.user_udf_fields && {
+                    user_udf_fields: rest.user_udf_fields,
+                  }),
                 },
               }),
             }),
             {
               headers: {
-                authtoken: process.env.API_KEY_SERVICEDESK,
+                authtoken: API_KEY_SERVICEDESK,
                 "Content-Type": "application/x-www-form-urlencoded",
               },
               httpsAgent,
@@ -78,16 +89,20 @@ export const updateUsers = async (
         } catch (error: any) {
           lastError = error;
           attempt++;
-          
+
           if (attempt < MAX_RETRIES) {
             const delay = INITIAL_RETRY_DELAY * Math.pow(2, attempt - 1); // Backoff exponencial
-            logger.warn(`Reintento ${attempt} para usuario ${id} en ${delay}ms`);
-            await new Promise(resolve => setTimeout(resolve, delay));
+            logger.warn(
+              `Reintento ${attempt} para usuario ${id} en ${delay}ms`
+            );
+            await new Promise((resolve) => setTimeout(resolve, delay));
           }
         }
       }
 
-      logger.error(`Error persistente al actualizar usuario ${id} después de ${MAX_RETRIES} intentos: ${lastError?.message}`);
+      logger.error(
+        `Error persistente al actualizar usuario ${id} después de ${MAX_RETRIES} intentos: ${lastError?.message}`
+      );
       return { success: false, id, error: lastError };
     };
 
@@ -105,26 +120,26 @@ export const updateUsers = async (
     let processed = 0;
     let successCount = 0;
     let errorCount = 0;
-    const errorDetails: {id: string, error: any}[] = [];
+    const errorDetails: { id: string; error: any }[] = [];
 
     while (processed < totalUsers) {
       const batch = updatedUsersSdp.slice(processed, processed + BATCH_SIZE);
       logger.info(
-        `Procesando lote ${Math.ceil(processed / BATCH_SIZE) + 1} de ${Math.ceil(
-          totalUsers / BATCH_SIZE
-        )}`
+        `Procesando lote ${
+          Math.ceil(processed / BATCH_SIZE) + 1
+        } de ${Math.ceil(totalUsers / BATCH_SIZE)}`
       );
 
       const batchResults = await processBatch(batch);
-      
+
       // Contabilizar resultados
-      batchResults.forEach(result => {
+      batchResults.forEach((result) => {
         if (result.success) {
           successCount++;
         } else {
           errorCount++;
           if (result.id && result.error) {
-            errorDetails.push({id: result.id, error: result.error});
+            errorDetails.push({ id: result.id, error: result.error });
           }
         }
       });
@@ -133,7 +148,9 @@ export const updateUsers = async (
 
       // Esperar antes del siguiente lote si no es el último
       if (processed < totalUsers) {
-        await new Promise((resolve) => setTimeout(resolve, DELAY_BETWEEN_BATCHES));
+        await new Promise((resolve) =>
+          setTimeout(resolve, DELAY_BETWEEN_BATCHES)
+        );
       }
     }
 
@@ -142,16 +159,31 @@ export const updateUsers = async (
       "==================== RESUMEN DE ACTUALIZACIÓN ===================="
     );
     logger.info(`Total procesados: ${totalUsers}`);
-    logger.info(`Actualizaciones exitosas: ${successCount} (${((successCount / totalUsers) * 100).toFixed(1)}%)`);
-    logger.info(`Errores: ${errorCount} (${((errorCount / totalUsers) * 100).toFixed(1)}%)`);
-    
+    logger.info(
+      `Actualizaciones exitosas: ${successCount} (${(
+        (successCount / totalUsers) *
+        100
+      ).toFixed(1)}%)`
+    );
+    logger.info(
+      `Errores: ${errorCount} (${((errorCount / totalUsers) * 100).toFixed(
+        1
+      )}%)`
+    );
+
     if (errorDetails.length > 0) {
-      logger.info("==================== DETALLES DE ERRORES ====================");
+      logger.info(
+        "==================== DETALLES DE ERRORES ===================="
+      );
       logger.info(`Primeros 10 errores de ${errorDetails.length}:`);
       errorDetails.slice(0, 10).forEach((err, index) => {
-        logger.info(`${index + 1}. Usuario ID ${err.id}: ${err.error?.message || err.error}`);
+        logger.info(
+          `${index + 1}. Usuario ID ${err.id}: ${
+            err.error?.message || err.error
+          }`
+        );
       });
-      
+
       // Opcional: Guardar todos los errores en un archivo si son muchos
       if (errorDetails.length > 10) {
         logger.info(`... y ${errorDetails.length - 10} errores adicionales`);
@@ -166,7 +198,6 @@ export const updateUsers = async (
     if (errorCount === 0) {
       logger.info("TODAS las actualizaciones se completaron exitosamente");
     }
-
   } catch (error) {
     logger.error("ERROR CRÍTICO EN EL PROCESO DE ACTUALIZACIÓN DE USUARIOS");
     logger.error(`Detalles del error: ${error}`);

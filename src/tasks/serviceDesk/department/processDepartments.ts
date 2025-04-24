@@ -59,7 +59,7 @@ export const processDepartments = async (
     if(departmentsToUpdate.length > 0){
       //PROCESO PARA HACER EL UPDATE
       updateDepartment(departmentsToUpdate);
-      logger.info(`Se han actualizado ${departmentsToUpdate.length} departamentos`);
+      logger.info(`Se han actualizado los departamentos correctament`);
     }
   } catch (error) {
     logger.error(`Se ha producido un error ${error}`);

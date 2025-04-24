@@ -111,6 +111,7 @@ export interface UserEpmapWithEmail {
   ZTPLANS_JF: string;
   EMAIL: string;
   ZORGEH: string;
+  N_EMPLEADO: string;
 }
 
 export interface UserSdp {
@@ -126,5 +127,8 @@ export interface UserSdpComplete {
   jobtitle?: string;
   department?: {
     name: string;
+  },
+  user_udf_fields?: {
+    udf_sline_301: string,
   }
 };

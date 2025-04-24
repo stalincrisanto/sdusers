@@ -17,8 +17,8 @@ export const getUsersEpmaps = async (
 
       const batchPromises = batch.map(async ({ email_id }) => {
         try {
-          //ESTA FUNCION CAMBIARLE OJO getUserEpmaps
-          const userInfo = await withTimeout(getInfoUserEmpams(email_id!), 10000); // 5s
+          //TODO: ESTA FUNCION CAMBIARLE OJO getUserEpmaps
+          const userInfo = await withTimeout(getUserEpmaps(email_id!), 10000); // 5s
           if (!userInfo) {
             logger.error(`Usuario con email: ${email_id} no encontrado`);
           }
@@ -32,7 +32,7 @@ export const getUsersEpmaps = async (
       const batchResults = await Promise.all(batchPromises);
       users.push(...batchResults);
 
-      logger.info(`Se han procesado ${batchResults.length} usuarios`);
+      logger.info(`Se han procesado ${batchResults.length} usuarios desde EPMAPS`);
 
       // Optional: agregar pequeño delay para dar respiro al servidor SOAP
       await delay(2000); // 200ms entre lotes

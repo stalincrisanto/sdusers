@@ -1,3 +1,4 @@
+// TODO: mover a otro directorio, a la carpeta utils
 export const dataForGetDepartments = new URLSearchParams({
   OPERATION_NAME: "read",
   INPUT_DATA:

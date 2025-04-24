@@ -3,12 +3,7 @@ import path from "path";
 import { logger } from "../utils/logger";
 
 export const loadEnv = (environmentName: string) => {
-  const envPath = path.join(
-    process.cwd(),
-    "src",
-    "config",
-    `.env.${environmentName}`
-  );
+  const envPath = path.join(__dirname, `.env.${environmentName}`);
   if (!fs.existsSync(envPath)) {
     logger.error(
       `Archivo .env.${environmentName} no encontrado, error al leer las variables de entorno`

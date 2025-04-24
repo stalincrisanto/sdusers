@@ -3,16 +3,19 @@ import axios from "axios";
 import { dataForGetDepartments } from "../consts";
 import { logger } from "../../../utils/logger";
 
+const SERVICE_DESK_API_URL = "https://aquasoporte.aguaquito.gob.ec/api";
+const API_KEY_SERVICEDESK = "072D8F37-AC13-4E0E-BB76-547FCC57435A";
+
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
 export const getDepartments = async (): Promise<string[]> => {
   try {
     const response = await axios.post(
-      `${process.env.SERVICE_DESK_API_URL}/cmdb/ci`,
+      `${SERVICE_DESK_API_URL}/cmdb/ci`,
       dataForGetDepartments,
       {
         headers: {
-          authtoken: process.env.API_KEY_SERVICEDESK,
+          authtoken: API_KEY_SERVICEDESK,
           "Content-Type": "application/x-www-form-urlencoded",
         },
         httpsAgent,
