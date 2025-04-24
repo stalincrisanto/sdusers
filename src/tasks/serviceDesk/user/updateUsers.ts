@@ -8,8 +8,6 @@ import {
 import { logger } from "../../../utils/logger";
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-const SERVICE_DESK_API_URL = "https://aquasoporte.aguaquito.gob.ec/api";
-const API_KEY_SERVICEDESK = "072D8F37-AC13-4E0E-BB76-547FCC57435A";
 
 export const updateUsers = async (
   usersSdp: UserSdp[],
@@ -17,8 +15,8 @@ export const updateUsers = async (
 ) => {
   try {
     // Constantes de configuración optimizadas
-    const BATCH_SIZE = 15; // Reducido para mayor estabilidad
-    const DELAY_BETWEEN_BATCHES = 2000; // Aumentado a 2 segundos
+    const BATCH_SIZE = 10; // Reducido para mayor estabilidad
+    const DELAY_BETWEEN_BATCHES = 3000; // Aumentado a 2 segundos
     const MAX_RETRIES = 3; // Máximo de reintentos por usuario
     const INITIAL_RETRY_DELAY = 1000; // 1 segundo inicial entre reintentos
 
@@ -40,7 +38,7 @@ export const updateUsers = async (
             }),
             ...(userFromEpmap?.N_EMPLEADO && {
               user_udf_fields: {
-                udf_sline_301: userFromEpmap.N_EMPLEADO,
+                udf_sline_1501: userFromEpmap.N_EMPLEADO,
               },
             }),
           };
@@ -63,7 +61,7 @@ export const updateUsers = async (
       while (attempt < MAX_RETRIES) {
         try {
           const response = await axios.put(
-            `${SERVICE_DESK_API_URL}/v3/users/${id}`,
+            `${process.env.SERVICE_DESK_API_URL}/v3/users/${id}`,
             new URLSearchParams({
               input_data: JSON.stringify({
                 user: {
@@ -77,7 +75,7 @@ export const updateUsers = async (
             }),
             {
               headers: {
-                authtoken: API_KEY_SERVICEDESK,
+                authtoken: process.env.API_KEY_SERVICEDESK,
                 "Content-Type": "application/x-www-form-urlencoded",
               },
               httpsAgent,
@@ -121,7 +119,9 @@ export const updateUsers = async (
     let successCount = 0;
     let errorCount = 0;
     const errorDetails: { id: string; error: any }[] = [];
-
+    logger.info("=====================================================================");
+    logger.info("================INICIO PROCESO ACTUALIZACIÓN USUARIOS================");
+    logger.info("=====================================================================");
     while (processed < totalUsers) {
       const batch = updatedUsersSdp.slice(processed, processed + BATCH_SIZE);
       logger.info(

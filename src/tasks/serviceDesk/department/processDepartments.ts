@@ -50,7 +50,7 @@ export const processDepartments = async (
     });
 
     if (departmentsToCreate.length > 0) {
-      createDepartment(departmentsToCreate);
+      await createDepartment(departmentsToCreate);
       logger.info(
         `Se han agregado ${departmentsToCreate.length} departamentos`
       );
@@ -58,7 +58,7 @@ export const processDepartments = async (
 
     if(departmentsToUpdate.length > 0){
       //PROCESO PARA HACER EL UPDATE
-      updateDepartment(departmentsToUpdate);
+      await updateDepartment(departmentsToUpdate);
       logger.info(`Se han actualizado los departamentos correctament`);
     }
   } catch (error) {

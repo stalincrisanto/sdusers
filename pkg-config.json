@@ -2,7 +2,8 @@
     "scripts": "dist/index.js",
     "assets": [
         "node_modules/**/*",
-        "src/**/*"
+        "src/**/*",
+        "dist/config/.env.dev"
     ],
     "targets": [
         "node16-win-x64"

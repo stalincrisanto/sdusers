@@ -118,7 +118,7 @@ export interface UserSdp {
   id: string;
   email_id: null;
   name: string;
-};
+}
 
 export interface UserSdpComplete {
   id: string;
@@ -127,8 +127,8 @@ export interface UserSdpComplete {
   jobtitle?: string;
   department?: {
     name: string;
-  },
+  };
   user_udf_fields?: {
-    udf_sline_301: string,
-  }
-};
+    udf_sline_1501: string;
+  };
+}

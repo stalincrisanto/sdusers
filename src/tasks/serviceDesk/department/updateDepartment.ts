@@ -1,13 +1,80 @@
+// import axios from "axios";
+// import https from "https";
+// import { logger } from "../../../utils/logger";
+// import { generateUpdateDepartmentsXml } from "../../../utils/generateXML";
+
+// const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
+// // Función para esperar una cantidad de milisegundos
+// const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// export const updateDepartment = async (
+//   departmentsToUpdate: {
+//     nameToUpdate: string;
+//     codeToUpdate: string;
+//   }[]
+// ) => {
+//   const batchSize = 10;
+//   const delayBetweenBatches = 2000;
+//   for (let i = 0; i < departmentsToUpdate.length; i += batchSize) {
+//     const batch = departmentsToUpdate.slice(i, i + batchSize);
+
+//     const promises = batch.map(({ nameToUpdate, codeToUpdate }) => {
+//       const INPUT_DATA = generateUpdateDepartmentsXml(
+//         nameToUpdate,
+//         codeToUpdate
+//       );
+//       const dataForUpdateDepartments = new URLSearchParams({
+//         OPERATION_NAME: "update",
+//         INPUT_DATA,
+//       });
+
+//       return updateDepartmentToSdp(dataForUpdateDepartments);
+//     });
+
+//     const results = await Promise.allSettled(promises);
+
+//     results.forEach((result, index) => {
+//       if (result.status === "rejected") {
+//         logger.error(`Error en batch [${i + index}]: ${result.reason}`);
+//       }
+//     });
+
+//     // Esperar antes de procesar el siguiente batch (excepto en el último)
+//     if (i + batchSize < departmentsToUpdate.length) {
+//       await sleep(delayBetweenBatches);
+//     }
+//   }
+// };
+
+// export const updateDepartmentToSdp = async (
+//   dataForUpdateDepartments: URLSearchParams
+// ) => {
+//   try {
+//     await axios.post(
+//       `${process.env.SERVICE_DESK_API_URL}/cmdb/ci`,
+//       dataForUpdateDepartments,
+//       {
+//         headers: {
+//           authtoken: process.env.API_KEY_SERVICEDESK,
+//           "Content-Type": "application/x-www-form-urlencoded",
+//         },
+//         httpsAgent,
+//       }
+//     );
+//   } catch (error) {
+//     throw new Error(`Fallo al actualizar: ${error}`);
+//   }
+// };
+
 import axios from "axios";
 import https from "https";
 import { logger } from "../../../utils/logger";
 import { generateUpdateDepartmentsXml } from "../../../utils/generateXML";
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-const SERVICE_DESK_API_URL = "https://aquasoporte.aguaquito.gob.ec/api";
-const API_KEY_SERVICEDESK = "072D8F37-AC13-4E0E-BB76-547FCC57435A";
 
-// Función para esperar una cantidad de milisegundos
+// Espera un tiempo en milisegundos
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const updateDepartment = async (
@@ -16,12 +83,39 @@ export const updateDepartment = async (
     codeToUpdate: string;
   }[]
 ) => {
-  const batchSize = 10;
-  const delayBetweenBatches = 2000;
-  for (let i = 0; i < departmentsToUpdate.length; i += batchSize) {
-    const batch = departmentsToUpdate.slice(i, i + batchSize);
+  const BATCH_SIZE = 5;
+  const DELAY_BETWEEN_BATCHES = 3000;
+  const MAX_RETRIES = 3;
+  const INITIAL_RETRY_DELAY = 1000;
 
-    const promises = batch.map(({ nameToUpdate, codeToUpdate }) => {
+  let processed = 0;
+  let successCount = 0;
+  let errorCount = 0;
+  const errorDetails: {
+    nameToUpdate: string;
+    codeToUpdate: string;
+    error: any;
+  }[] = [];
+
+  logger.info(
+    "====================================================================="
+  );
+  logger.info(
+    "================ INICIO ACTUALIZACIÓN DE DEPARTAMENTOS ================"
+  );
+  logger.info(
+    "====================================================================="
+  );
+
+  while (processed < departmentsToUpdate.length) {
+    const batch = departmentsToUpdate.slice(processed, processed + BATCH_SIZE);
+    logger.info(
+      `Procesando lote ${Math.ceil(processed / BATCH_SIZE) + 1} de ${Math.ceil(
+        departmentsToUpdate.length / BATCH_SIZE
+      )}`
+    );
+
+    for (const { nameToUpdate, codeToUpdate } of batch) {
       const INPUT_DATA = generateUpdateDepartmentsXml(
         nameToUpdate,
         codeToUpdate
@@ -31,40 +125,78 @@ export const updateDepartment = async (
         INPUT_DATA,
       });
 
-      return updateDepartmentToSdp(dataForUpdateDepartments);
-    });
+      let attempt = 0;
+      let success = false;
+      let lastError: any = null;
 
-    const results = await Promise.allSettled(promises);
+      while (attempt < MAX_RETRIES && !success) {
+        try {
+          await axios.post(
+            `${process.env.SERVICE_DESK_API_URL}/cmdb/ci`,
+            dataForUpdateDepartments,
+            {
+              headers: {
+                authtoken: process.env.API_KEY_SERVICEDESK,
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              httpsAgent,
+              timeout: 10000,
+            }
+          );
+          success = true;
+          successCount++;
+        } catch (error: any) {
+          lastError = error;
+          attempt++;
 
-    results.forEach((result, index) => {
-      if (result.status === "rejected") {
-        logger.error(`Error en batch [${i + index}]: ${result.reason}`);
+          if (attempt < MAX_RETRIES) {
+            const delay = INITIAL_RETRY_DELAY * Math.pow(2, attempt - 1);
+            logger.warn(
+              `Reintento ${attempt} para depto "${nameToUpdate}" (${codeToUpdate}) en ${delay}ms`
+            );
+            await sleep(delay);
+          }
+        }
       }
-    });
 
-    // Esperar antes de procesar el siguiente batch (excepto en el último)
-    if (i + batchSize < departmentsToUpdate.length) {
-      await sleep(delayBetweenBatches);
+      if (!success) {
+        errorCount++;
+        errorDetails.push({ nameToUpdate, codeToUpdate, error: lastError });
+        logger.error(`❌ Fallo persistente: ${nameToUpdate} (${codeToUpdate})`);
+      }
+    }
+
+    processed += batch.length;
+
+    if (processed < departmentsToUpdate.length) {
+      await sleep(DELAY_BETWEEN_BATCHES);
     }
   }
-};
 
-export const updateDepartmentToSdp = async (
-  dataForUpdateDepartments: URLSearchParams
-) => {
-  try {
-    await axios.post(
-      `${SERVICE_DESK_API_URL}/cmdb/ci`,
-      dataForUpdateDepartments,
-      {
-        headers: {
-          authtoken: API_KEY_SERVICEDESK,
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        httpsAgent,
-      }
+  logger.info(
+    "==================== RESUMEN DE ACTUALIZACIÓN ===================="
+  );
+  logger.info(`Total procesados: ${departmentsToUpdate.length}`);
+  logger.info(`Departamentos actualizados: ✅ ${successCount}`);
+  logger.info(`Errores: ❌ ${errorCount}`);
+
+  if (errorDetails.length > 0) {
+    logger.info(
+      "==================== DETALLES DE ERRORES ===================="
     );
-  } catch (error) {
-    throw new Error(`Fallo al actualizar: ${error}`);
+    errorDetails.slice(0, 10).forEach((err, i) => {
+      logger.info(
+        `${i + 1}. ${err.nameToUpdate} (${err.codeToUpdate}): ${
+          err.error?.message || err.error
+        }`
+      );
+    });
+    if (errorDetails.length > 10) {
+      logger.info(`... y ${errorDetails.length - 10} errores adicionales`);
+    }
+  }
+
+  if (errorCount === 0) {
+    logger.info("🎉 TODOS los departamentos fueron actualizados exitosamente");
   }
 };

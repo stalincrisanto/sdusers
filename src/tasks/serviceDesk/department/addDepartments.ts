@@ -4,8 +4,6 @@ import { logger } from "../../../utils/logger";
 import { generateCreateDepartmentsXml } from "../../../utils/generateXML";
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-const SERVICE_DESK_API_URL = "https://aquasoporte.aguaquito.gob.ec/api";
-const API_KEY_SERVICEDESK = "072D8F37-AC13-4E0E-BB76-547FCC57435A";
 
 export const createDepartment = async (
   departmentsToCreate: {
@@ -26,11 +24,11 @@ export const addDepartmentToSdp = async (
 ) => {
   try {
     await axios.post(
-      `${SERVICE_DESK_API_URL}/cmdb/ci`,
+      `${process.env.SERVICE_DESK_API_URL}/cmdb/ci`,
       dataForAddDepartments,
       {
         headers: {
-          authtoken: API_KEY_SERVICEDESK,
+          authtoken: process.env.API_KEY_SERVICEDESK,
           "Content-Type": "application/x-www-form-urlencoded",
         },
         httpsAgent,
