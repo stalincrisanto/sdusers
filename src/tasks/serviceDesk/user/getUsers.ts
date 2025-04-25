@@ -9,7 +9,7 @@ const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 export const getUsers = async () => {
     const allUsers: UserSdp[] = [];
     let startIndex = 1;
-    const batchSize = 100;
+    const batchSize = 50;
     let totalUsers = 0;
     let hasMoreUsers = true;
   
@@ -46,7 +46,7 @@ export const getUsers = async () => {
         hasMoreUsers = startIndex <= totalUsers;
   
         // Pequeña pausa para evitar saturar la API
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
       return allUsers;
     } catch (error) {
