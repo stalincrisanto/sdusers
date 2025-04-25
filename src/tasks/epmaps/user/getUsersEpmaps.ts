@@ -10,20 +10,22 @@ export const getUsersEpmaps = async (
 ): Promise<UserEpmapWithEmail[] | null> => {
   const BATCH_SIZE = 10; // Puedes ajustar esto según rendimiento/pruebas
   const users: (UserEpmap | null)[] = [];
+  let userFailed: number = 0;
 
   try {
     for (let i = 0; i < usersSdp.length; i += BATCH_SIZE) {
       const batch = usersSdp.slice(i, i + BATCH_SIZE);
 
-      const batchPromises = batch.map(async ({ email_id }) => {
+      const batchPromises = batch.map(async ({ email_id, id }) => {
         try {
-          //TODO: ESTA FUNCION CAMBIARLE OJO getUserEpmaps
           const userInfo = await withTimeout(getUserEpmaps(email_id!), 10000); // 5s
           if (!userInfo) {
-            logger.error(`Usuario con email: ${email_id} no encontrado`);
+            logger.error(`Usuario con email: ${email_id} NO ENCONTRADO`);
+            userFailed ++;
+            return null;
           }
           // Agregar el email al objeto devuelto por getInfoUserEmpams
-          return userInfo ? { ...userInfo, EMAIL: email_id } : null;
+          return  { ...userInfo, EMAIL: email_id, USER_ID: id };
         } catch (err) {
           return null;
         }
@@ -37,6 +39,10 @@ export const getUsersEpmaps = async (
       // Optional: agregar pequeño delay para dar respiro al servidor SOAP
       await delay(2000); // 200ms entre lotes
     }
+    
+    // TODO: agregar un log aparte con los correos sin respuesta
+    logger.info(`Total de usuarios obtenidos desde EPMAPS ${users.length}`);
+    logger.info(`Total de registros sin respuesta de EPMAPS ${userFailed}`);
 
     return users.filter((user) => user !== null) as UserEpmapWithEmail[];
   } catch (error) {

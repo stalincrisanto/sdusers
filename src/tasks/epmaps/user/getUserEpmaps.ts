@@ -26,9 +26,12 @@ export const getUserEpmaps = async (email: string) => {
       CORREO_EMPLEADO: email,
     };
     const [response] = await client.SI_EstrucOrgEmpleados_ReqAsync(args);
+    const { RETORNO, DATOS } = response;
 
-    const user: UserEpmap = response.DATOS;
-    return user;
+    if (RETORNO?.COD !== 0) {
+      return null;
+    }
+    return DATOS;
   } catch (error) {
     logger.error(`ERROR AL OBTENER DATOS DEL SERVICIO SOAP ${error}`);
     throw error;

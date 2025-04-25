@@ -216,7 +216,6 @@
 //   }
 // };
 
-
 import https from "https";
 import axios from "axios";
 import {
@@ -233,7 +232,11 @@ export const updateUsers = async (
   usersEpmaps: UserEpmapWithEmail[]
 ) => {
   try {
-    const BATCH_SIZE = 5;
+    logger.info(
+      `ESTOY EN LA FUNCION PARA MODIFICAR usuarios sdp tamano ${usersSdp.length} usuarios epmaps tamano ${usersEpmaps.length}`
+    );
+    logger.info(`PARA VERIFICAR QUE TODOS LOS DE EPMAPS TIENEN CORREO ${JSON.stringify(usersEpmaps)}`);
+    const BATCH_SIZE = 10;
     const DELAY_BETWEEN_BATCHES = 3000;
     const MAX_RETRIES = 3;
     const INITIAL_RETRY_DELAY = 1000;
@@ -284,9 +287,9 @@ export const updateUsers = async (
 
       while (attempt < MAX_RETRIES) {
         try {
-          logger.debug(`🔄 Intento ${attempt + 1} para usuario ID ${id}`);
-          logger.debug(`📧 Email: ${email_id}`);
-          logger.debug(`📦 Payload:\n${JSON.stringify(userPayload, null, 2)}`);
+          logger.info(`🔄 Intento ${attempt + 1} para usuario ID ${id}`);
+          logger.info(`📧 Email: ${email_id}`);
+          logger.info(`📦 Payload:\n${JSON.stringify(userPayload, null, 2)}`);
 
           const response = await axios.put(
             `${process.env.SERVICE_DESK_API_URL}/v3/users/${id}`,
@@ -365,9 +368,9 @@ export const updateUsers = async (
     while (processed < totalUsers) {
       const batch = updatedUsersSdp.slice(processed, processed + BATCH_SIZE);
       logger.info(
-        `🚀 Procesando lote ${Math.ceil(processed / BATCH_SIZE) + 1} de ${Math.ceil(
-          totalUsers / BATCH_SIZE
-        )}`
+        `🚀 Procesando lote ${
+          Math.ceil(processed / BATCH_SIZE) + 1
+        } de ${Math.ceil(totalUsers / BATCH_SIZE)}`
       );
 
       const batchResults = await processBatch(batch);
@@ -387,19 +390,22 @@ export const updateUsers = async (
           }
         }
       });
-      
 
       processed += batch.length;
 
       if (processed < totalUsers) {
-        logger.info(`⏳ Esperando ${DELAY_BETWEEN_BATCHES} ms antes del siguiente lote...`);
+        logger.info(
+          `⏳ Esperando ${DELAY_BETWEEN_BATCHES} ms antes del siguiente lote...`
+        );
         await new Promise((resolve) =>
           setTimeout(resolve, DELAY_BETWEEN_BATCHES)
         );
       }
     }
 
-    logger.info("============= RESUMEN DE ACTUALIZACIÓN DE USUARIOS =============");
+    logger.info(
+      "============= RESUMEN DE ACTUALIZACIÓN DE USUARIOS ============="
+    );
     logger.info(`Total intentados: ${totalUsers}`);
     logger.info(`✅ Éxitos: ${successCount}`);
     logger.info(`❌ Fallos: ${errorCount}`);
@@ -408,9 +414,13 @@ export const updateUsers = async (
       logger.error("========== DETALLES DE LOS ERRORES ==========");
       errorDetails.slice(0, 10).forEach((err, i) => {
         logger.error(
-          `${i + 1}. ID: ${err.id} | Email: ${err.email_id || "desconocido"}\n` +
-          `🧾 Payload: ${JSON.stringify(err.payload, null, 2)}\n` +
-          `💥 Error: ${err.error?.response?.data || err.error?.message || err.error}`
+          `${i + 1}. ID: ${err.id} | Email: ${
+            err.email_id || "desconocido"
+          }\n` +
+            `🧾 Payload: ${JSON.stringify(err.payload, null, 2)}\n` +
+            `💥 Error: ${
+              err.error?.response?.data || err.error?.message || err.error
+            }`
         );
       });
       if (errorDetails.length > 10) {

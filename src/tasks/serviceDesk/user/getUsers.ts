@@ -48,7 +48,6 @@ export const getUsers = async () => {
         // Pequeña pausa para evitar saturar la API
         await new Promise((resolve) => setTimeout(resolve, 200));
       }
-      logger.info(`Total de usuarios obtenidos: ${allUsers.length}`);
       return allUsers;
     } catch (error) {
       logger.error(`Error al obtener usuarios: ${error}`);

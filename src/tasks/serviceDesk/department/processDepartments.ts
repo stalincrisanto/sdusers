@@ -71,7 +71,7 @@ export const processDepartments = async (
     if (departmentsToUpdate.length > 0) {
       //PROCESO PARA HACER EL UPDATE
       await updateDepartment(departmentsToUpdate);
-      logger.info(`Se han actualizado los departamentos correctament`);
+      logger.info(`Se han actualizado los departamentos correctamente`);
     }
   } catch (error) {
     logger.error(`Se ha producido un error ${error}`);

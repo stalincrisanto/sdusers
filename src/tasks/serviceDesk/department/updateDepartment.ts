@@ -81,7 +81,7 @@ export const updateDepartment = async (
     codeToUpdate: string;
   }[]
 ) => {
-  const BATCH_SIZE = 5;
+  const BATCH_SIZE = 10;
   const DELAY_BETWEEN_BATCHES = 3000;
   const MAX_RETRIES = 3;
   const INITIAL_RETRY_DELAY = 1000;
@@ -118,8 +118,8 @@ export const updateDepartment = async (
         INPUT_DATA,
       });
 
-      logger.debug(`📄 XML generado para ${nameToUpdate}:`);
-      logger.debug(INPUT_DATA);
+      logger.info(`📄 XML generado para ${nameToUpdate}:`);
+      logger.info(INPUT_DATA);
 
       let attempt = 0;
       let success = false;
@@ -127,7 +127,7 @@ export const updateDepartment = async (
 
       while (attempt < MAX_RETRIES && !success) {
         try {
-          logger.debug(`🔁 Intento ${attempt + 1} - Enviando solicitud POST`);
+          logger.info(`🔁 Intento ${attempt + 1} - Enviando solicitud POST`);
           await axios.post(
             `${process.env.SERVICE_DESK_API_URL}/cmdb/ci`,
             dataForUpdateDepartments,
