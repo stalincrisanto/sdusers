@@ -118,9 +118,6 @@ export const updateDepartment = async (
         INPUT_DATA,
       });
 
-      logger.info(`📄 XML generado para ${nameToUpdate}:`);
-      logger.info(INPUT_DATA);
-
       let attempt = 0;
       let success = false;
       let lastError: any = null;
@@ -128,7 +125,7 @@ export const updateDepartment = async (
       while (attempt < MAX_RETRIES && !success) {
         try {
           logger.info(`🔁 Intento ${attempt + 1} - Enviando solicitud POST`);
-          const result = await axios.post(
+          await axios.post(
             `${process.env.SERVICE_DESK_API_URL}/cmdb/ci`,
             dataForUpdateDepartments,
             {
@@ -140,8 +137,6 @@ export const updateDepartment = async (
               timeout: 10000,
             }
           );
-          logger.info(`RESULTADO DE LA ACTUALIZACION DE DEPARTAMENTO SIN FORMATO ${result}`);
-          logger.info(`RESULTADO DE LA ACTUALIZACION DE DEPARTAMENTO ${JSON.stringify(result.data)}`);
           logger.info(`✅ Actualización exitosa: ${nameToUpdate}`);
           success = true;
           successCount++;

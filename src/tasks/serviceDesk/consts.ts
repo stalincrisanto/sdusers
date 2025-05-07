@@ -15,6 +15,7 @@ export const dataForAddDepartments = (inputData: string) => {
 export const dataForGetUsers = (startIndex: number, batchSize: number) => {
   const inputData = `{
     list_info: {
+      sort_field: name,
       start_index: ${startIndex},
       row_count: ${batchSize},
       get_total_count: ${startIndex === 0},

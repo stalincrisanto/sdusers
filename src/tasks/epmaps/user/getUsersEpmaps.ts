@@ -1,81 +1,3 @@
-// import { getInfoUserEmpams } from "../../../soapFake";
-// import { logger } from "../../../utils/logger";
-// import { UserEpmap, UserEpmapWithEmail, UserSdp } from "../../../utils/types";
-// import { getUserEpmaps } from "./getUserEpmaps";
-
-// const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-
-// export const getUsersEpmaps = async (
-//   usersSdp: UserSdp[]
-// ): Promise<UserEpmapWithEmail[] | null> => {
-//   const BATCH_SIZE = 5; // Puedes ajustar esto según rendimiento/pruebas
-//   const users: (UserEpmap | null)[] = [];
-//   const usersWithFailed: string[] = [];
-//   let userFailed: number = 0;
-
-//   try {
-//     for (let i = 0; i < usersSdp.length; i += BATCH_SIZE) {
-//       const batch = usersSdp.slice(i, i + BATCH_SIZE);
-
-//       const batchPromises = batch.map(async ({ email_id, id }) => {
-//         try {
-//           const userInfo = await withTimeout(getUserEpmaps(email_id!), 10000); // 5s
-//           if (!userInfo) {
-//             logger.error(`Usuario con email: ${email_id} NO ENCONTRADO`);
-//             userFailed ++;
-//             usersWithFailed.push(email_id!)
-//             return null;
-//           }
-//           // Agregar el email al objeto devuelto por getInfoUserEmpams
-//           return  { ...userInfo, EMAIL: email_id, USER_ID: id };
-//         } catch (err) {
-//           return null;
-//         }
-//       });
-
-//       const batchResults = await Promise.all(batchPromises);
-//       // Filtra los null antes de agregarlos al array final
-//       const validResults = batchResults.filter(result => result !== null);
-//       users.push(...validResults);
-
-//       logger.info(`Se han procesado ${validResults.length} usuarios desde EPMAPS`);
-
-//       // Optional: agregar pequeño delay para dar respiro al servidor SOAP
-//       // AQUI AL PARECER HAY UNA LENTITUD EN ALGUN LADO
-//       await delay(5000); // 200ms entre lotes
-//     }
-
-//     // TODO: agregar un log aparte con los correos sin respuesta
-//     logger.info(`Total de usuarios obtenidos desde EPMAPS ${users.length}`);
-//     logger.info(`Total de registros sin respuesta de EPMAPS ${userFailed}`);
-//     logger.info(`Total de usuarios errores obtenidos desde EPMAPS ${usersWithFailed.length}`);
-//     logger.info(`Total de usuarios errores obtenidos desde EPMAPS ${usersWithFailed}`);
-
-//     return users.filter((user) => user !== null) as UserEpmapWithEmail[];
-//   } catch (error) {
-//     logger.error(`Se ha producido un error ${error}`);
-//     return null;
-//   }
-// };
-
-// const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
-//   return new Promise((resolve, reject) => {
-//     const timeoutId = setTimeout(() => {
-//       reject(new Error(`Timeout de ${ms}ms alcanzado`));
-//     }, ms);
-
-//     promise
-//       .then((res) => {
-//         clearTimeout(timeoutId);
-//         resolve(res);
-//       })
-//       .catch((err) => {
-//         clearTimeout(timeoutId);
-//         reject(err);
-//       });
-//   });
-// };
-
 import { getUserEpmaps } from "./getUserEpmaps";
 import { logger } from "../../../utils/logger";
 import { UserEpmapWithEmail, UserSdp } from "../../../utils/types";
@@ -108,8 +30,6 @@ export const getUsersEpmaps = async (
       const batch = usersSdp.slice(i, i + batchSize);
       const batchResults = await processBatch(batch, usersWithErrors);
 
-      logger.info(`RESPUESTA DE batchResults en el proceso del batch en getUsersEpmaps ${JSON.stringify(batchResults)}`);
-      
       const validResults = batchResults.filter((result): result is UserEpmapWithEmail => result !== null);
       users.push(...validResults);
 
@@ -175,9 +95,8 @@ const processBatch = async (
     batch.map(async ({ email_id, id }) => {
       try {
         const userInfo = await getUserEpmaps(email_id!); // email_id siempre existe
-        logger.info(`USUARIO QUE OBTENGO EN EL PROCESO DE BATCH DE EPMAPS ${JSON.stringify(userInfo)}`);
         if (!userInfo) {
-          logger.warn(`Usuario con email: ${email_id} no encontrado`);
+          logger.info(`Usuario con email: ${email_id} no encontrado`);
           return null;
         }
         return { ...userInfo, EMAIL: email_id, USER_ID: id };
