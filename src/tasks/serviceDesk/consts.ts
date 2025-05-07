@@ -17,7 +17,7 @@ export const dataForGetUsers = (startIndex: number, batchSize: number) => {
     list_info: {
       start_index: ${startIndex},
       row_count: ${batchSize},
-      get_total_count: ${startIndex === 1},
+      get_total_count: ${startIndex === 0},
       search_fields: {
         email_id: "*" 
       } 

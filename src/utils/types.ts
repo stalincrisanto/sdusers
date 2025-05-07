@@ -113,6 +113,7 @@ export interface UserEpmapWithEmail {
   ZORGEH: string;
   N_EMPLEADO: string;
   USER_ID: string;
+  CORREO_JF: string
 }
 
 export interface UserSdp {
